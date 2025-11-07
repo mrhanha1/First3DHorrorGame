@@ -5,11 +5,19 @@ using UnityEngine;
 
 public interface IInputService
 {
-    bool GetInteractKeyDown();
-    bool GetInteractKeyUp();
-    bool GetInteractKey();
-    bool GetCancelKeyDown();
-    float GetScrollDelta();
+    // new input system
+    Vector2 MoveInput { get; }
+    Vector2 LookInput { get; }
+    bool IsJumpPressed { get;}
+    bool IsSprintHeld { get; }
+
+    bool IsInteractPressed { get; }
+    bool IsInteractReleased { get; }
+    bool IsInteractHeld { get; }
+    bool IsCancelPressed { get; }
+
+    void Enable();
+    void Disable();
 }
 
 

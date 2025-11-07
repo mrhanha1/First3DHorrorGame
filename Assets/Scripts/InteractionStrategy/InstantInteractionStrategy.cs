@@ -2,15 +2,10 @@ using UnityEngine;
 
 public class InstantInteractionStrategy : IInteractionStrategy
 {
-    private readonly KeyCode interactionKey;
-    public InstantInteractionStrategy(KeyCode interactionKey)
-    {
-        this.interactionKey = interactionKey;
-    }
 
-    public void HandleInput(IInteractable target, PlayerInteractionController player)
+    public void HandleInput(IInteractable target, PlayerInteractionController player, IInputService input)
     {
-        if (Input.GetKeyDown(interactionKey) && target.CanInteract(player))
+        if (input.IsInteractPressed && target.CanInteract(player))
         {
             target.OnInteract(player);
         }

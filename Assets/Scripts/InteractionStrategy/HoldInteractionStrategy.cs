@@ -2,29 +2,23 @@ using UnityEngine;
 
 public class HoldInteractionStrategy : IInteractionStrategy
 {
-    private readonly KeyCode interactionKey;
     private float holdTime = 0f;
     private bool isHolding = false;
 
-    public HoldInteractionStrategy(KeyCode interactionKey)
-    {
-        this.interactionKey = interactionKey;
-    }
-    public void HandleInput(IInteractable target, PlayerInteractionController player)
+    public void HandleInput(IInteractable target, PlayerInteractionController player, IInputService input)
     {
         if (!(target is IHoldable holdable)) return;
 
-        if (Input.GetKeyDown(interactionKey) && !isHolding) // tr??ng h?p b?t ??u nh?n
+        if (input.IsInteractPressed && !isHolding) // tr??ng h?p b?t ??u nh?n
         {
             isHolding = true;
             holdTime = 0f;
             holdable.OnHoldStart(player);
         }
 
-        if (Input.GetKey(interactionKey) && isHolding) // ?ang gi?
+        if (input.IsInteractHeld && isHolding) // ?ang gi?
         {
             holdTime += Time.deltaTime;
-            float progress = Mathf.Clamp01(holdTime / holdable.GetHoldDuration());
             holdable.OnHoldProgress(player, holdTime);
 
             if (holdTime >= holdable.GetHoldDuration())
@@ -35,7 +29,7 @@ public class HoldInteractionStrategy : IInteractionStrategy
                 Reset();
             }
         }
-        if (Input.GetKeyUp(interactionKey) && isHolding) // th? nút
+        if (input.IsInteractReleased && isHolding) // tha nut
         {
             if (holdTime < holdable.GetHoldDuration())
             {
@@ -44,6 +38,7 @@ public class HoldInteractionStrategy : IInteractionStrategy
             Reset();
         }
     }
+
 
     public void Reset()
     {

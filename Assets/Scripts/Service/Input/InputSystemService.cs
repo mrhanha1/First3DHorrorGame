@@ -6,56 +6,71 @@ using UnityEngine.InputSystem;
 public class InputSystemService : IInputService, IDisposable
 {
     private PlayerInputActions inputActions;
-    private InputAction interactAction;
-    private InputAction cancelAction;
-    private InputAction scrollAction;
 
     private bool interactPressed = false;
-    private bool interactPressedThisFrame = false;
-    private bool interactReleasedThisFrame = false;
-    private bool cancelPressedThisFrame = false;
+    private bool interactHeld = false;
+    private bool interactReleased = false;
+    private bool jumpPressed = false;
+    private bool cancelPressed = false;
 
     public InputSystemService()
     {
         inputActions = new PlayerInputActions();
-        interactAction = inputActions.Player.Interact;
-        cancelAction = inputActions.Player.Cancel;
-        scrollAction = inputActions.Player.Scroll;
 
-        interactAction.started += _ => { interactPressed = true; interactPressedThisFrame = true; };
-        interactAction.canceled += _ => { interactPressed = false; interactReleasedThisFrame = true; };
-        cancelAction.performed += _ => { cancelPressedThisFrame = true; };
-
-        inputActions.Enable();
+        inputActions.Player.Interact.performed += OnInteractPerformed;
+        inputActions.Player.Interact.canceled += OnInteractCanceled;
+        inputActions.Player.Jump.performed += OnJumpPerfomred;
+        inputActions.Player.Cancel.performed += OnCancelPerformed;
+        inputActions.Player.Enable();
     }
 
-    public bool GetInteractKeyDown()
+    public bool IsInteractPressed => interactPressed;
+    public bool IsInteractReleased => interactReleased;
+    public bool IsInteractHeld => inputActions.Player.Interact.IsPressed();
+    public bool IsJumpPressed => jumpPressed;
+    public bool IsCancelPressed => cancelPressed;
+    public bool IsSprintHeld => inputActions.Player.Sprint.IsPressed();
+    public Vector2 MoveInput => inputActions.Player.Move.ReadValue<Vector2>();
+    public Vector2 LookInput => inputActions.Player.Look.ReadValue<Vector2>();
+
+    private void OnInteractPerformed(InputAction.CallbackContext ctx)
     {
-        bool result = interactPressedThisFrame;
-        interactPressedThisFrame = false;
-        return result;
+        interactPressed = true;
     }
-
-    public bool GetInteractKey() => interactPressed;
-
-    public bool GetInteractKeyUp()
+    private void OnInteractCanceled(InputAction.CallbackContext ctx)
     {
-        bool result = interactReleasedThisFrame;
-        interactReleasedThisFrame = false;
-        return result;
+        interactReleased = true;
     }
-
-    public bool GetCancelKeyDown()
+    private void OnJumpPerfomred(InputAction.CallbackContext ctx)
     {
-        bool result = cancelPressedThisFrame;
-        cancelPressedThisFrame = false;
-        return result;
+        jumpPressed = true;
     }
-    public float GetScrollDelta() => scrollAction.ReadValue<Vector2>().y;
+    private void OnCancelPerformed(InputAction.CallbackContext ctx)
+    {
+        cancelPressed = true;
+    }
+    public void LateUpdate()
+    {
+        interactPressed = false;
+        interactReleased = false;
+        jumpPressed = false;
+        cancelPressed = false;
+    }
     public void Dispose()
     {
-        inputActions?.Disable();
-        inputActions?.Dispose();
+        inputActions.Player.Interact.performed -= OnInteractPerformed;
+        inputActions.Player.Interact.canceled -= OnInteractCanceled;
+        inputActions.Player.Jump.performed -= OnJumpPerfomred;
+        inputActions.Player.Cancel.performed -= OnCancelPerformed;
+        inputActions.Dispose();
+    }
+    public void Enable()
+    {
+        inputActions.Player.Enable();
+    }
+    public void Disable()
+    {
+        inputActions.Player.Disable();
     }
 }
 #endif

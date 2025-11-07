@@ -8,17 +8,17 @@ namespace StarterAssets
 	public class PlayerMovementController : MonoBehaviour
 	{
 		[Header("Character Input Values")]
-        [SerializeField] public Vector2 move;
-        [SerializeField] public Vector2 look;
-        [SerializeField] public bool jump;
-        [SerializeField] public bool sprint;
+        public Vector2 move;
+        public Vector2 look;
+        public bool jump;
+        public bool sprint;
 
 		[Header("Movement Settings")]
-        [SerializeField] public bool analogMovement;
+        public bool analogMovement;
 
 		[Header("Mouse Cursor Settings")]
-        [SerializeField] public bool cursorLocked = true;
-        [SerializeField] public bool cursorInputForLook = true;
+        public bool cursorLocked = true;
+        public bool cursorInputForLook = true;
 
 #if ENABLE_INPUT_SYSTEM
 		public void OnMove(InputValue value)

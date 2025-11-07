@@ -25,7 +25,7 @@ public class DoorInteractable : InteractableBase, ILockable
     protected override void Awake()
     {
         base.Awake();
-        if (doorPanel != null) doorPanel = this.transform;
+        if (doorPanel == null) doorPanel = this.transform;
         initialRotation = doorPanel.localEulerAngles;
         UpdatePrompt();
     }
@@ -74,7 +74,7 @@ public class DoorInteractable : InteractableBase, ILockable
         isAnimating = true;
         float elapsedTime = 0f;
         Vector3 startRotation = doorPanel.localEulerAngles;
-        Vector3 targetRotation = initialRotation - new Vector3(0, openAngle, 0);
+        Vector3 targetRotation = initialRotation;
         while (elapsedTime < openDuration)
         {
             elapsedTime += Time.deltaTime;

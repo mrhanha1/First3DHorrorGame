@@ -9,9 +9,12 @@ public class GameBootstrap : MonoBehaviour
 
     [Header("Camera Settings")]
     [SerializeField] private bool useCinemachine = true;
+    [SerializeField] private Cinemachine.CinemachineBrain cinemachineBrain;
 
     [Header("Debug")]
     [SerializeField] private bool enableDebugMode = true;
+
+    private IInputService inputService;
 
     private void Awake()
     {
@@ -28,39 +31,44 @@ public class GameBootstrap : MonoBehaviour
     {
         if (enableDebugMode) Debug.Log("===Initializing Game Bootstrap===");
 
-        RegisterInputSevice();
+        RegisterInputService();
         RegisterCameraService();
         RegisterAudioService();
         RegisterHighlighterService();
         RegisterUIService();
-        RegisterCameraService();
+        //RegisterCameraService();
+        RegisterCameraProvider();
 
         if (enableDebugMode) PrintStatus();
     }
 
-    private void RegisterInputSevice()
+    private void RegisterInputService()
     {
-        IInputService inputService = null;
         if (useNewInputSystem)
         {
-            inputService = new InputSystemService();
+            var inputSysServ = new InputSystemService();
+            this.inputService = inputSysServ;
+            ServiceLocator.Register<IInputService>(inputSysServ);
             if (enableDebugMode) Debug.Log("Input System Service Registered");
         }
         if (inputService == null)
         {
             inputService = new InputService(interactKey, cancelKey);
+            ServiceLocator.Register<IInputService>(inputService);
             if (enableDebugMode) Debug.Log(" old Input Service Registered");
         }
-        ServiceLocator.Register<IInputService>(inputService);
     }
-
     private void RegisterCameraProvider()
     {
         ICameraProvider cameraProvider = null;
 
         if (useCinemachine)
         {
-            var brain = FindObjectOfType<Cinemachine.CinemachineBrain>();
+            var brain = cinemachineBrain;
+            if (cinemachineBrain == null)
+            {
+                brain = FindObjectOfType<Cinemachine.CinemachineBrain>();
+            }
             if (brain != null)
             {
                 cameraProvider = new CinemachineCameraProvider(brain);
@@ -90,6 +98,7 @@ public class GameBootstrap : MonoBehaviour
     {
         var uiManager = FindObjectOfType<InteractionUIManager>();
         IUIService uiService = uiManager != null ? new UIServiceAdapter(uiManager) : new DummyUIService();
+        ServiceLocator.Register<IUIService>(uiService);
         if (enableDebugMode) Debug.Log("UI Service Registered");
     }
     private void RegisterCameraService()
@@ -111,6 +120,14 @@ public class GameBootstrap : MonoBehaviour
         Debug.Log($"Input Service: {(useNewInputSystem? "new INput System" : "Legacy input")}");
         Debug.Log($"Camera Provider: {(useCinemachine? "Cinemachine":"Standard camera")}");
         Debug.Log("================================");
+    }
+
+    private void LateUpdate()
+    {
+        if (inputService is InputSystemService inputsysServ)
+        {
+            inputsysServ.LateUpdate();
+        }
     }
 
     private void OnDestroy()

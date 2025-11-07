@@ -3,7 +3,7 @@ using UnityEngine;
 public class ProximityInteractionStrategy : IInteractionStrategy
 {
     private bool isInRange = false;
-    public void HandleInput(IInteractable target, PlayerInteractionController player)
+    public void HandleInput(IInteractable target, PlayerInteractionController player, IInputService input)
     {
         if (!(target is IProximityTriggerable proximity)) return;
 

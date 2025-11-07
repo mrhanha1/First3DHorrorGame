@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CinemachineCameraProvider : ICameraProvider
 {
+
     private Cinemachine.CinemachineBrain brain;
 
     public CinemachineCameraProvider(Cinemachine.CinemachineBrain brainComponent)
