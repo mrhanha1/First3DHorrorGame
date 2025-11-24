@@ -18,6 +18,8 @@ public interface IInputService
 
     void Enable();
     void Disable();
+    void SwitchActionMap(string actionMapName);
+    void SetCursorState(bool locked);
 }
 
 
@@ -62,4 +64,6 @@ public interface IUIService
     void HideHoldProgress();
     void ShowMessage(string message, float duration = 3f);
     void ShowItemPickup(string itemName, Sprite icon);
+    void ShowDocument(string title, Sprite image, string content, System.Action onClose);
+    void CloseDocument();
 }

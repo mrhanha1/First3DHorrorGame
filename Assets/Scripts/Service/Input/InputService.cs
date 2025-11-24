@@ -46,5 +46,15 @@ public class InputService : IInputService
     {
         throw new NotImplementedException();
     }
+
+    public void SwitchActionMap(string actionMapName)
+    {
+        throw new NotImplementedException();
+    }
+
+    public void SetCursorState(bool locked)
+    {
+        throw new NotImplementedException();
+    }
 }
 

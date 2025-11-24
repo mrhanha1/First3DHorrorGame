@@ -9,7 +9,7 @@ public static class ServiceLocator
     public static void Register<T>(T service) where T : class
     {
         Type type = typeof(T);
-        if (!services.ContainsKey(type))
+        if (services.ContainsKey(type))
         {
             //services.Add(type, service);
             Debug.LogWarning($"[ServiceLocator] {type.Name} already registered. Overwriting...");
@@ -36,7 +36,7 @@ public static class ServiceLocator
         service = null;
         return false;
     }
-    public static bool IsUnregistered<T>() where T : class
+    public static bool IsRegistered<T>() where T : class
     {
         return services.ContainsKey(typeof(T));
     }

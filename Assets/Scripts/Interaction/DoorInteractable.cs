@@ -1,4 +1,5 @@
-
+﻿
+using DG.Tweening;
 using System.Collections;
 using UnityEngine;
 
@@ -8,17 +9,23 @@ public class DoorInteractable : InteractableBase, ILockable
     [SerializeField] private Transform doorPanel;
     [SerializeField] private bool isLocked = false;
     [SerializeField] private string requiredKeyID = "";
-    [SerializeField] private float openAngle = 90f;
+    [SerializeField] private Vector3 openAngle = new Vector3(0, 90, 0);
+    [SerializeField] private Vector3 translateOffset = Vector3.zero;
     [SerializeField] private float openDuration = 2f;
+    [SerializeField] private bool isOpen = false;
+
+    [Header("Prompt")]
+    [SerializeField] private string lockPromptText = "Bị khoá rồi";
+    [SerializeField] private string OpenPromptText = "Mở cửa";
+    [SerializeField] private string ClosePromptText = "Đóng cửa";
 
     [Header("Audio")]
     [SerializeField] private AudioClip doorOpenSound;
     [SerializeField] private AudioClip doorLockedSound;
 
-    private bool isOpen = false;
     private bool isAnimating = false;
     private Vector3 initialRotation;
-
+    private Vector3 initialPosition;
     public bool IsLocked => isLocked;
     public string RequiredKeyID => requiredKeyID;
 
@@ -26,10 +33,26 @@ public class DoorInteractable : InteractableBase, ILockable
     {
         base.Awake();
         if (doorPanel == null) doorPanel = this.transform;
-        initialRotation = doorPanel.localEulerAngles;
-        UpdatePrompt();
+        if (isOpen)
+        {
+            initialRotation = doorPanel.localEulerAngles - openAngle;
+            initialPosition = doorPanel.localPosition - translateOffset;
+        }
+        else
+        {
+            initialRotation = doorPanel.localEulerAngles;
+            initialPosition = doorPanel.localPosition;
+        }
     }
 
+    public override string getPromptText()
+    {
+        if (isLocked)
+        {
+            return lockPromptText;
+        }
+        return isOpen ? ClosePromptText : OpenPromptText;
+    }
     public override bool CanInteract(PlayerInteractionController player)
     {
         return !isAnimating;
@@ -40,8 +63,18 @@ public class DoorInteractable : InteractableBase, ILockable
         if (isAnimating) return;
         if (isLocked)
         {
-            PlaySound(doorLockedSound);
-            return;
+            var inventory = ServiceLocator.Get<IInventoryService>();
+            if (inventory != null && inventory.HasItem(requiredKeyID))
+            {
+                TryUnlock(requiredKeyID);
+            }
+            else
+            {
+                PlaySound(doorLockedSound);
+                var uiService = ServiceLocator.Get<IUIService>();
+                uiService.ShowMessage(lockPromptText);
+                return;
+            }
         }
         if (isOpen)
         {
@@ -57,34 +90,34 @@ public class DoorInteractable : InteractableBase, ILockable
         isAnimating = true;
         PlaySound(doorOpenSound);
         float elapsedTime = 0f;
-        Vector3 startRotation = doorPanel.localEulerAngles;
-        Vector3 targetRotation = initialRotation + new Vector3(0, openAngle, 0);
-        while (elapsedTime < openDuration)
-        {
-            elapsedTime += Time.deltaTime;
-            doorPanel.localEulerAngles = Vector3.Lerp(startRotation, targetRotation, elapsedTime / openDuration);
-            yield return null;
-        }
-        doorPanel.localEulerAngles = targetRotation;
+
+        Vector3 targetRotation = initialRotation + openAngle;
+        Vector3 targetPosition = initialPosition + translateOffset;
+
+        Sequence sequence = DOTween.Sequence();
+        sequence.SetEase(Ease.InOutSine);
+        sequence.Append(doorPanel.DOLocalRotate(targetRotation, openDuration));
+        sequence.Join(doorPanel.DOLocalMove(targetPosition, openDuration));
+        yield return sequence.WaitForCompletion();
+
         isOpen = true;
         isAnimating = false;
+        UpdatePrompt();
     }
     private IEnumerator CloseDoor()
     {
         isAnimating = true;
-        float elapsedTime = 0f;
-        Vector3 startRotation = doorPanel.localEulerAngles;
-        Vector3 targetRotation = initialRotation;
-        while (elapsedTime < openDuration)
-        {
-            elapsedTime += Time.deltaTime;
-            doorPanel.localEulerAngles = Vector3.Lerp(startRotation, targetRotation, elapsedTime / openDuration);
-            yield return null;
-        }
+
+        Sequence sequence = DOTween.Sequence();
+        sequence.SetEase(Ease.InOutSine);
+        sequence.Append(doorPanel.DOLocalRotate(initialRotation, openDuration));
+        sequence.Join(doorPanel.DOLocalMove(initialPosition, openDuration));
+        yield return sequence.WaitForCompletion();
+
         PlaySound(doorLockedSound);
-        doorPanel.localEulerAngles = targetRotation;
         isOpen = false;
         isAnimating = false;
+        UpdatePrompt();
     }
     public bool TryUnlock(string keyID)
     {
@@ -92,25 +125,23 @@ public class DoorInteractable : InteractableBase, ILockable
         if (keyID != requiredKeyID) return false;
 
         isLocked = false;
-        UpdatePrompt();
         return true;
     }
 
     public void Lock()
     {
         isLocked = true;
-        UpdatePrompt();
     }
 
     private void UpdatePrompt()
     {
         if (isLocked)
         {
-            promptText = "Locked";
+            promptText = "Bị khoá";
         }
         else
         {
-            promptText = isOpen ? "Close Door" : "Open Door";
+            promptText = isOpen ? "Đóng cửa" : "Mở cửa";
         }
     }
 

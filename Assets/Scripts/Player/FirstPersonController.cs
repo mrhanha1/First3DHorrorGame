@@ -65,7 +65,7 @@ namespace StarterAssets
 		private float _jumpTimeoutDelta;
 		private float _fallTimeoutDelta;
 
-		private IInputService inputService;// 🆕
+		private IInputService inputService;
 
 #if ENABLE_INPUT_SYSTEM
         private PlayerInput _playerInput;
@@ -102,7 +102,7 @@ namespace StarterAssets
 			_controller = GetComponent<CharacterController>();
 			_input = GetComponent<PlayerMovementController>();
 			
-            inputService = ServiceLocator.Get<IInputService>(); // 🆕
+            inputService = ServiceLocator.Get<IInputService>();
 #if ENABLE_INPUT_SYSTEM
             _playerInput = GetComponent<PlayerInput>();
 #else
@@ -135,7 +135,7 @@ namespace StarterAssets
 
 		private void CameraRotation()
 		{
-            Vector2 lookInput = inputService.LookInput; // 🆕
+            Vector2 lookInput = inputService.LookInput;
             // if there is an input
             if (lookInput.sqrMagnitude >= _threshold)
 			{
@@ -158,8 +158,8 @@ namespace StarterAssets
 
 		private void Move()
 		{
-            Vector2 moveInput = inputService.MoveInput; // 🆕
-            bool isSprinting = inputService.IsSprintHeld; // 🆕
+            Vector2 moveInput = inputService.MoveInput; 
+            bool isSprinting = inputService.IsSprintHeld;
             // set target speed based on move speed, sprint speed and if sprint is pressed
             float targetSpeed = isSprinting ? SprintSpeed : MoveSpeed;
 
@@ -209,7 +209,7 @@ namespace StarterAssets
 
 		private void JumpAndGravity()
 		{
-			bool jumpInput = inputService.IsJumpPressed; // 🆕
+			bool jumpInput = inputService.IsJumpPressed;
             if (Grounded)
 			{
 				// reset the fall timeout timer

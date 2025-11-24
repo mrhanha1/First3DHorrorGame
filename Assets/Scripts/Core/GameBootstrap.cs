@@ -36,8 +36,9 @@ public class GameBootstrap : MonoBehaviour
         RegisterAudioService();
         RegisterHighlighterService();
         RegisterUIService();
-        //RegisterCameraService();
         RegisterCameraProvider();
+        RegisterInventoryService();
+        RegisterMinigameService();
 
         if (enableDebugMode) PrintStatus();
     }
@@ -113,7 +114,25 @@ public class GameBootstrap : MonoBehaviour
         ServiceLocator.Register<ICameraService>(cameraShake);
         if (enableDebugMode) Debug.Log("Camera Service Registered");
     }
-
+    private void RegisterInventoryService()
+    {
+        var inventoryService = new InventoryService();
+        ServiceLocator.Register<IInventoryService>(inventoryService);
+        if (enableDebugMode) Debug.Log("Inventory Service Registered");
+    }
+    private void RegisterMinigameService()
+    {
+        var minigameManager = FindObjectOfType<MinigameServiceManager>();
+        if (minigameManager != null)
+        {
+            ServiceLocator.Register<IMinigameService>(minigameManager);
+            if (enableDebugMode) Debug.Log("Minigame Service Registered");
+        }
+        else
+        {
+            Debug.LogWarning("[GameBootstrap] MinigameServiceManager not found in scene.");
+        }
+    }
     private void PrintStatus()
     {
         Debug.Log("===Service Locator Status===");

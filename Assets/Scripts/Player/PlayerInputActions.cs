@@ -302,6 +302,194 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""Minigame"",
+            ""id"": ""37506056-9ed9-4bab-b3d3-4596703b9462"",
+            ""actions"": [
+                {
+                    ""name"": ""Right"",
+                    ""type"": ""Button"",
+                    ""id"": ""c515fe60-7b7d-470b-b6be-3d2237f57ca6"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Down"",
+                    ""type"": ""Button"",
+                    ""id"": ""adb64d5c-52d8-469b-a3a8-d88fd3df7012"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Left"",
+                    ""type"": ""Button"",
+                    ""id"": ""db9a4e3f-6bdc-46c4-b57c-2bc24a2987df"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Up"",
+                    ""type"": ""Button"",
+                    ""id"": ""19501b11-fc2f-4276-b671-c7cc52dbde43"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Increase"",
+                    ""type"": ""Button"",
+                    ""id"": ""7ad06d2b-5fee-48af-85ab-172bbbe663f8"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Decrease"",
+                    ""type"": ""Button"",
+                    ""id"": ""05d3d63c-31c3-4094-892a-4603ca6b1fd1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Submit"",
+                    ""type"": ""Button"",
+                    ""id"": ""faf16aa7-687b-4a73-b672-f7c8a6fd1ad8"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Cancel"",
+                    ""type"": ""Button"",
+                    ""id"": ""76ff7988-d351-4dc6-b92a-04c44b79f3c9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Reset"",
+                    ""type"": ""Button"",
+                    ""id"": ""7fc82fe2-5a4c-4354-8ad7-03e48f1409b5"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""6d5f67a1-a649-421b-b491-0fed34eef25d"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Increase"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""11d8138d-1253-4b16-99c4-1857fc2a2d30"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Decrease"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a021edd0-fb56-4310-be90-07cc2a93ea9c"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Cancel"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""db3e58ec-d398-4c90-b7fb-acb094a6bedc"",
+                    ""path"": ""<Keyboard>/backspace"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Reset"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3e5dfc74-7834-4625-9999-4686ce51ecd2"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Up"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bf026548-52ee-48ec-ab86-169d4eed190a"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Left"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8a0c1fd3-7402-4e03-aeae-c876450e6347"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Down"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""39829948-bc48-4027-87ef-c8608999dd5a"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Right"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2ee26b51-f9d0-4cfd-af18-970a4865142e"",
+                    ""path"": ""<Keyboard>/enter"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Submit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -363,6 +551,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
         m_Player_Cancel = m_Player.FindAction("Cancel", throwIfNotFound: true);
         m_Player_Scroll = m_Player.FindAction("Scroll", throwIfNotFound: true);
+        // Minigame
+        m_Minigame = asset.FindActionMap("Minigame", throwIfNotFound: true);
+        m_Minigame_Right = m_Minigame.FindAction("Right", throwIfNotFound: true);
+        m_Minigame_Down = m_Minigame.FindAction("Down", throwIfNotFound: true);
+        m_Minigame_Left = m_Minigame.FindAction("Left", throwIfNotFound: true);
+        m_Minigame_Up = m_Minigame.FindAction("Up", throwIfNotFound: true);
+        m_Minigame_Increase = m_Minigame.FindAction("Increase", throwIfNotFound: true);
+        m_Minigame_Decrease = m_Minigame.FindAction("Decrease", throwIfNotFound: true);
+        m_Minigame_Submit = m_Minigame.FindAction("Submit", throwIfNotFound: true);
+        m_Minigame_Cancel = m_Minigame.FindAction("Cancel", throwIfNotFound: true);
+        m_Minigame_Reset = m_Minigame.FindAction("Reset", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -514,6 +713,116 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         }
     }
     public PlayerActions @Player => new PlayerActions(this);
+
+    // Minigame
+    private readonly InputActionMap m_Minigame;
+    private List<IMinigameActions> m_MinigameActionsCallbackInterfaces = new List<IMinigameActions>();
+    private readonly InputAction m_Minigame_Right;
+    private readonly InputAction m_Minigame_Down;
+    private readonly InputAction m_Minigame_Left;
+    private readonly InputAction m_Minigame_Up;
+    private readonly InputAction m_Minigame_Increase;
+    private readonly InputAction m_Minigame_Decrease;
+    private readonly InputAction m_Minigame_Submit;
+    private readonly InputAction m_Minigame_Cancel;
+    private readonly InputAction m_Minigame_Reset;
+    public struct MinigameActions
+    {
+        private @PlayerInputActions m_Wrapper;
+        public MinigameActions(@PlayerInputActions wrapper) { m_Wrapper = wrapper; }
+        public InputAction @Right => m_Wrapper.m_Minigame_Right;
+        public InputAction @Down => m_Wrapper.m_Minigame_Down;
+        public InputAction @Left => m_Wrapper.m_Minigame_Left;
+        public InputAction @Up => m_Wrapper.m_Minigame_Up;
+        public InputAction @Increase => m_Wrapper.m_Minigame_Increase;
+        public InputAction @Decrease => m_Wrapper.m_Minigame_Decrease;
+        public InputAction @Submit => m_Wrapper.m_Minigame_Submit;
+        public InputAction @Cancel => m_Wrapper.m_Minigame_Cancel;
+        public InputAction @Reset => m_Wrapper.m_Minigame_Reset;
+        public InputActionMap Get() { return m_Wrapper.m_Minigame; }
+        public void Enable() { Get().Enable(); }
+        public void Disable() { Get().Disable(); }
+        public bool enabled => Get().enabled;
+        public static implicit operator InputActionMap(MinigameActions set) { return set.Get(); }
+        public void AddCallbacks(IMinigameActions instance)
+        {
+            if (instance == null || m_Wrapper.m_MinigameActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_MinigameActionsCallbackInterfaces.Add(instance);
+            @Right.started += instance.OnRight;
+            @Right.performed += instance.OnRight;
+            @Right.canceled += instance.OnRight;
+            @Down.started += instance.OnDown;
+            @Down.performed += instance.OnDown;
+            @Down.canceled += instance.OnDown;
+            @Left.started += instance.OnLeft;
+            @Left.performed += instance.OnLeft;
+            @Left.canceled += instance.OnLeft;
+            @Up.started += instance.OnUp;
+            @Up.performed += instance.OnUp;
+            @Up.canceled += instance.OnUp;
+            @Increase.started += instance.OnIncrease;
+            @Increase.performed += instance.OnIncrease;
+            @Increase.canceled += instance.OnIncrease;
+            @Decrease.started += instance.OnDecrease;
+            @Decrease.performed += instance.OnDecrease;
+            @Decrease.canceled += instance.OnDecrease;
+            @Submit.started += instance.OnSubmit;
+            @Submit.performed += instance.OnSubmit;
+            @Submit.canceled += instance.OnSubmit;
+            @Cancel.started += instance.OnCancel;
+            @Cancel.performed += instance.OnCancel;
+            @Cancel.canceled += instance.OnCancel;
+            @Reset.started += instance.OnReset;
+            @Reset.performed += instance.OnReset;
+            @Reset.canceled += instance.OnReset;
+        }
+
+        private void UnregisterCallbacks(IMinigameActions instance)
+        {
+            @Right.started -= instance.OnRight;
+            @Right.performed -= instance.OnRight;
+            @Right.canceled -= instance.OnRight;
+            @Down.started -= instance.OnDown;
+            @Down.performed -= instance.OnDown;
+            @Down.canceled -= instance.OnDown;
+            @Left.started -= instance.OnLeft;
+            @Left.performed -= instance.OnLeft;
+            @Left.canceled -= instance.OnLeft;
+            @Up.started -= instance.OnUp;
+            @Up.performed -= instance.OnUp;
+            @Up.canceled -= instance.OnUp;
+            @Increase.started -= instance.OnIncrease;
+            @Increase.performed -= instance.OnIncrease;
+            @Increase.canceled -= instance.OnIncrease;
+            @Decrease.started -= instance.OnDecrease;
+            @Decrease.performed -= instance.OnDecrease;
+            @Decrease.canceled -= instance.OnDecrease;
+            @Submit.started -= instance.OnSubmit;
+            @Submit.performed -= instance.OnSubmit;
+            @Submit.canceled -= instance.OnSubmit;
+            @Cancel.started -= instance.OnCancel;
+            @Cancel.performed -= instance.OnCancel;
+            @Cancel.canceled -= instance.OnCancel;
+            @Reset.started -= instance.OnReset;
+            @Reset.performed -= instance.OnReset;
+            @Reset.canceled -= instance.OnReset;
+        }
+
+        public void RemoveCallbacks(IMinigameActions instance)
+        {
+            if (m_Wrapper.m_MinigameActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        public void SetCallbacks(IMinigameActions instance)
+        {
+            foreach (var item in m_Wrapper.m_MinigameActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_MinigameActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    public MinigameActions @Minigame => new MinigameActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     public InputControlScheme KeyboardMouseScheme
     {
@@ -559,5 +868,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnInteract(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
         void OnScroll(InputAction.CallbackContext context);
+    }
+    public interface IMinigameActions
+    {
+        void OnRight(InputAction.CallbackContext context);
+        void OnDown(InputAction.CallbackContext context);
+        void OnLeft(InputAction.CallbackContext context);
+        void OnUp(InputAction.CallbackContext context);
+        void OnIncrease(InputAction.CallbackContext context);
+        void OnDecrease(InputAction.CallbackContext context);
+        void OnSubmit(InputAction.CallbackContext context);
+        void OnCancel(InputAction.CallbackContext context);
+        void OnReset(InputAction.CallbackContext context);
     }
 }

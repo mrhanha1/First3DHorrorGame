@@ -14,6 +14,7 @@ public class HoldInteractionStrategy : IInteractionStrategy
             isHolding = true;
             holdTime = 0f;
             holdable.OnHoldStart(player);
+            return;
         }
 
         if (input.IsInteractHeld && isHolding) // ?ang gi?

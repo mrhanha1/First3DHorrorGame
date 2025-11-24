@@ -22,6 +22,7 @@ public class InputSystemService : IInputService, IDisposable
         inputActions.Player.Jump.performed += OnJumpPerfomred;
         inputActions.Player.Cancel.performed += OnCancelPerformed;
         inputActions.Player.Enable();
+        //SetCursorState(true);
     }
 
     public bool IsInteractPressed => interactPressed;
@@ -71,6 +72,22 @@ public class InputSystemService : IInputService, IDisposable
     public void Disable()
     {
         inputActions.Player.Disable();
+    }
+    public void SwitchActionMap(string actionMapName)
+    {
+        inputActions.asset.FindActionMap(actionMapName)?.Enable();
+        foreach (var map in inputActions.asset.actionMaps)
+        {
+            if (map.name != actionMapName)
+            {
+                map.Disable();
+            }
+        }
+    }
+    public void SetCursorState(bool locked)
+    {
+        Cursor.lockState = locked ? CursorLockMode.Locked : CursorLockMode.None;
+        //Cursor.visible = !locked;
     }
 }
 #endif

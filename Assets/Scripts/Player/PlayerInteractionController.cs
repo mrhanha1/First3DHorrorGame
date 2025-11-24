@@ -10,6 +10,13 @@ public class PlayerInteractionController : MonoBehaviour
     [SerializeField] private LayerMask interactableLayer;
     [SerializeField] private float raycastInterval = 0.1f;
 
+    [Header("Debug Settings")]
+    [SerializeField] private bool enableDebug = true;
+    [SerializeField] private bool showRaycastGizmos = true;
+    [SerializeField] private Color rayHitColor = Color.green;
+    [SerializeField] private Color rayMissColor = Color.red;
+    private RaycastDetector raycastDetector;
+    private RaycastResult lastRaycastResult;
 
     private IUIService uiService;
     private IInputService inputService;
@@ -18,20 +25,10 @@ public class PlayerInteractionController : MonoBehaviour
     private Dictionary<InteractionType, IInteractionStrategy> strategies;
     private IInteractable currentInteractable;
     private IInteractionStrategy currentStrategy;
-    private float raycastTimer =0f;
+
+    private float raycastTimer = 0f;
     private bool isLocked = false;
 
-    [Header("Debug Settings")]
-    [SerializeField] private bool enableDebug = true;
-    [SerializeField] private bool showRaycastGizmos = true;
-    [SerializeField] private Color rayHitColor = Color.green;
-    [SerializeField] private Color rayMissColor = Color.red;
-
-    private Vector3 lastRayOrigin;
-    private Vector3 lastRayDirection;
-    private bool lastRaycastHit;
-    private float lastRaycastDistance;
-    private Vector3 lastHitPoint;
     private void Awake()
     {
         uiService = ServiceLocator.Get<IUIService>();
@@ -45,6 +42,12 @@ public class PlayerInteractionController : MonoBehaviour
             {InteractionType.Proximity, new ProximityInteractionStrategy() }
         };
 
+        raycastDetector = new RaycastDetector(
+            cameraProvider,
+            interactableLayer,
+            interactionRange,
+            enableDebug);
+        inputService.SetCursorState(true);
         if (enableDebug)
         {
             Debug.Log($"[PlayerInteraction] Initialized - Range: {interactionRange}, Layer: {interactableLayer.value}");
@@ -64,60 +67,23 @@ public class PlayerInteractionController : MonoBehaviour
     }
     private void DetectInteractable()
     {
-        if (!cameraProvider.IsValid())
-        {
-            if (enableDebug) Debug.LogWarning("[PlayerInteraction] Camera provider is invalid!");
-            return;
-        }
-
-        Ray ray = new Ray(cameraProvider.GetCameraPosition(), cameraProvider.GetCameraForward());
-
-        lastRayOrigin = cameraProvider.GetCameraPosition();//
-        lastRayDirection = cameraProvider.GetCameraForward();//
-
-        if (Physics.Raycast(ray, out RaycastHit hit, interactionRange, interactableLayer))
-        {
-            lastRaycastHit = true;//
-            lastRaycastDistance = hit.distance;//
-            lastHitPoint = hit.point;//
-
-            if (enableDebug)//
-            {//
-                Debug.Log($"[PlayerInteraction] Raycast HIT: {hit.collider.name} at distance {hit.distance:F2}");
-            }//
-            //
-
-            var interactable = hit.collider.GetComponentInParent<IInteractable>();
-            if (interactable != null)
-            {
-                if (enableDebug) Debug.Log($"[PlayerInteraction] Found IInteractable on {hit.collider.name}");
-                SetCurrentInteractable(interactable);
-                return;
-            }
-        }
-        else
-        {
-            lastRaycastHit = false;//
-            lastRaycastDistance = interactionRange;//
-            lastHitPoint = lastRayOrigin + lastRayDirection * interactionRange;//
-
-            if (enableDebug && currentInteractable != null)
-            {
-                Debug.Log("[PlayerInteraction] Raycast MISS - No interactable detected");
-            }
-        }
-        SetCurrentInteractable(null);
+        lastRaycastResult = raycastDetector.DetectInteractable();
+        SetCurrentInteractable(lastRaycastResult.Interactable);
     }
     private void SetCurrentInteractable(IInteractable interactable)
     { 
         if (currentInteractable == interactable) return;
         if (currentInteractable != null) // khi có interactable hiện tại rồi
         {
-            if (currentInteractable is ILookable lookable)
-                lookable.OnLookAway(this);
+            if (currentInteractable is MonoBehaviour mb && mb != null)
+            {
+                if (currentInteractable is ILookable lookable)
+                    lookable.OnLookAway(this);
+            }
             currentStrategy?.Reset();
         }
         currentInteractable = interactable;
+
         if (currentInteractable != null) // khi phát hiện được interactable mới
         {
             if (currentInteractable is ILookable lookable)
@@ -144,19 +110,21 @@ public class PlayerInteractionController : MonoBehaviour
     {
         isLocked = true;
         SetCurrentInteractable(null);
+        //inputService.SetCursorState(false);
     }
     public void UnlockInteraction()
     {
         isLocked = false;
+        //inputService.SetCursorState(true);
     }
     public void LockMovement()
     {
-        var movement = GetComponent<PlayerMovementController>();
+        var movement = GetComponent<FirstPersonController>();
         if (movement != null) movement.enabled = false;
     }
     public void UnlockMovement()
     {
-        var movement = GetComponent<PlayerMovementController>();
+        var movement = GetComponent<FirstPersonController>();
         if (movement != null) movement.enabled = true;
     }
 
@@ -164,25 +132,32 @@ public class PlayerInteractionController : MonoBehaviour
     {
         if (!showRaycastGizmos || !Application.isPlaying) return;
 
-        // Draw ray
-        Gizmos.color = lastRaycastHit ? rayHitColor : rayMissColor;
-        Gizmos.DrawLine(lastRayOrigin, lastRayOrigin + lastRayDirection * lastRaycastDistance);
-
-        // Draw endpoint
-        Gizmos.DrawWireSphere(lastHitPoint, 0.1f);
-
-        // Draw interaction range sphere
+        Gizmos.color = lastRaycastResult.HasHit ? rayHitColor : rayMissColor;
+        Gizmos.DrawLine(
+            lastRaycastResult.RayOrigin,
+            lastRaycastResult.RayOrigin + lastRaycastResult.RayDirection * lastRaycastResult.RayDistance
+            );
+        Gizmos.DrawWireSphere(lastRaycastResult.Endpoint, 0.1f);
         if (cameraProvider != null && cameraProvider.IsValid())
         {
-            Gizmos.color = new Color(1f, 1f, 0f, 0.2f);
-            Gizmos.DrawWireSphere(lastRayOrigin, interactionRange);
+            Gizmos.color = new Color(1, 1, 0, 0.2f);
+            Gizmos.DrawWireSphere(lastRaycastResult.RayOrigin, interactionRange);
         }
-
-        // Draw hit point
-        if (lastRaycastHit)
+        if (lastRaycastResult.HasHit)
         {
             Gizmos.color = Color.yellow;
-            Gizmos.DrawSphere(lastHitPoint, 0.15f);
+            Gizmos.DrawWireSphere(lastRaycastResult.Endpoint, 0.2f);
         }
+    }
+    private void OnValidate()
+    {
+        if (Application.isPlaying && raycastDetector != null)
+        {
+            raycastDetector.SetDebugMode(enableDebug);
+        }
+    }
+    private void OnApplicationFocus(bool focus)
+    {
+        //inputService.SetCursorState(focus && !isLocked);
     }
 }

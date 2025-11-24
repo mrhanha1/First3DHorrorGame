@@ -1,9 +1,9 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public abstract class InteractableBase : MonoBehaviour, IInteractable, ILookable, IHighlightable
 {
     [Header("Interaction")]
-    [SerializeField] protected string promptText = "Interact";
+    [SerializeField] protected string promptText = "Tương tác";
     [SerializeField] protected float interactionRange = 3f;
 
     [Header("Feedback")]
@@ -18,7 +18,7 @@ public abstract class InteractableBase : MonoBehaviour, IInteractable, ILookable
     protected virtual void Awake()
     {
         audioService = ServiceLocator.Get<IAudioService>();
-        highlighter = GetComponent<IHighlighter>();
+        highlighter = ServiceLocator.Get<IHighlighter>();
         gameObject.layer = LayerMask.NameToLayer("Interactable");
     }
 
@@ -47,7 +47,8 @@ public abstract class InteractableBase : MonoBehaviour, IInteractable, ILookable
     {
         if (!isBeingLookedAt) return;
         isBeingLookedAt = false;
-        if (useHighlight) DisableHighlight();
+        if (useHighlight && this != null && gameObject != null)
+            DisableHighlight();
     }
     public void EnableHighlight()
     {
