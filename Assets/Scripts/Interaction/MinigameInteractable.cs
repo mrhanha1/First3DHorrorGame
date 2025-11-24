@@ -1,89 +1,66 @@
-﻿using Cinemachine;
-using UnityEngine;
+﻿using UnityEngine;
 
+/// <summary>
+/// Điểm tương tác để vào minigame
+/// CHỈ quản lý: điều kiện vào game, item requirement
+/// KHÔNG quản lý: logic game, reward
+/// </summary>
 public class MinigameInteractable : InteractableBase
 {
-    [Header("Minigame Settings")]
+    [Header("Minigame Reference")]
     [SerializeField] private MinigameBase minigame;
+
+    [Header("Lock Settings")]
     [SerializeField] private bool lockAfterCompleted = false;
     [SerializeField] private string completedPromptText = "Đã giải rồi";
 
-    [Header("Requirements")]
+    [Header("Item Requirements")]
     [SerializeField] private bool requiresItem = false;
     [SerializeField] private string requiredItemID;
     [SerializeField] private bool consumeItemOnUse = false;
 
-    [Header("Reward Type")]
-    [SerializeField] private RewardType rewardType = RewardType.None;
-
-    [Header("Item Reward")]
-    [SerializeField] private string rewardItemID;
-    [SerializeField] private Sprite rewardIcon;
-
-    [Header("Environment Reward")]
-    [SerializeField] private GameObject rewardPrefab;
-    [SerializeField] private Transform rewardSpawnPoint;
-
-    [Header("Stone Door Reward")]
-    [SerializeField] private StoneDoorInteractable stoneDoor;
-
     private IMinigameService minigameService;
     private IInventoryService inventoryService;
+    private IUIService uiService;
     private bool isCompleted = false;
-
-    public enum RewardType
-    {
-        None,
-        Item,
-        Environment,
-        StoneDoor
-    }
 
     protected override void Awake()
     {
         base.Awake();
+
         minigameService = ServiceLocator.Get<IMinigameService>();
         inventoryService = ServiceLocator.Get<IInventoryService>();
+        uiService = ServiceLocator.Get<IUIService>();
 
         if (minigame == null)
         {
             minigame = GetComponentInChildren<MinigameBase>();
             if (minigame == null)
-                Debug.LogError($"[MinigameInteractable] no minigame assigned on {gameObject.name}");
+                Debug.LogError($"[MinigameInteractable] No minigame assigned on {gameObject.name}");
         }
-
-        ValidateRewardSettings();
     }
 
-    private void ValidateRewardSettings()
+    private void Start()
     {
-        // Cảnh báo nếu thiếu settings cho reward type đã chọn
-        switch (rewardType)
+        // Subscribe event để biết khi nào game hoàn thành
+        if (minigame != null)
         {
-            case RewardType.Item:
-                if (string.IsNullOrEmpty(rewardItemID))
-                    Debug.LogWarning($"[MinigameInteractable] {gameObject.name}: Reward type is Item but rewardItemID is empty");
-                break;
-
-            case RewardType.Environment:
-                if (rewardPrefab == null)
-                    Debug.LogWarning($"[MinigameInteractable] {gameObject.name}: Reward type is Environment but rewardPrefab is null");
-                break;
-
-            case RewardType.StoneDoor:
-                if (stoneDoor == null)
-                    Debug.LogWarning($"[MinigameInteractable] {gameObject.name}: Reward type is StoneDoor but stoneDoor is null");
-                break;
+            minigame.OnGameCompleted += HandleGameCompleted;
         }
     }
 
     public override bool CanInteract(PlayerInteractionController player)
     {
-        if (isCompleted && lockAfterCompleted) return false;
+        // Đã hoàn thành và bị lock
+        if (isCompleted && lockAfterCompleted)
+            return false;
+
+        // Cần item
         if (requiresItem && inventoryService != null)
         {
             return inventoryService.HasItem(requiredItemID);
         }
+
         return true;
     }
 
@@ -91,8 +68,10 @@ public class MinigameInteractable : InteractableBase
     {
         if (isCompleted && lockAfterCompleted)
             return completedPromptText;
+
         if (requiresItem && inventoryService != null && !inventoryService.HasItem(requiredItemID))
             return $"Cần: {requiredItemID}";
+
         return promptText;
     }
 
@@ -100,14 +79,14 @@ public class MinigameInteractable : InteractableBase
     {
         if (!CanInteract(player))
         {
-            var uiService = ServiceLocator.Get<IUIService>();
             uiService?.ShowMessage("Không thể chơi lúc này");
             return;
         }
 
-        if (requiresItem && consumeItemOnUse)
+        // Tiêu thụ item nếu cần
+        if (requiresItem && consumeItemOnUse && inventoryService != null)
         {
-            inventoryService?.RemoveItem(requiredItemID);
+            inventoryService.RemoveItem(requiredItemID);
         }
 
         PlaySound(interactSound);
@@ -127,112 +106,25 @@ public class MinigameInteractable : InteractableBase
             return;
         }
 
-        minigameService.StartMinigame(minigame, OnMinigameComplete);
+        // Chỉ start, không cần callback
+        minigameService.StartMinigame(minigame);
     }
 
-    private void OnMinigameComplete()
+    private void HandleGameCompleted(bool success)
     {
-        bool success = true; // =================== GIAI QUYET SAU ======================
         if (success)
         {
-            OnMinigameSuccess();
-        }
-        else
-        {
-            OnMinigameFailure();
+            isCompleted = true;
+            Debug.Log($"[MinigameInteractable] {gameObject.name} completed successfully");
         }
     }
 
-    private void OnMinigameSuccess()
+    private void OnDestroy()
     {
-        isCompleted = true;
-
-        switch (rewardType)
+        // Unsubscribe event
+        if (minigame != null)
         {
-            case RewardType.Item:
-                GiveItemReward();
-                break;
-
-            case RewardType.Environment:
-                GiveEnvironmentReward();
-                break;
-
-            case RewardType.StoneDoor:
-                UnlockStoneDoor();
-                break;
-
-            case RewardType.None:
-                break;
+            minigame.OnGameCompleted -= HandleGameCompleted;
         }
-
-        var uiService = ServiceLocator.Get<IUIService>();
-        uiService?.ShowMessage("Làm được rồi", 2f);
-    }
-
-    private void OnMinigameFailure()
-    {
-        var uiService = ServiceLocator.Get<IUIService>();
-        uiService?.ShowMessage("Vẫn chưa được", 2f);
-    }
-
-    private void GiveItemReward()
-    {
-        if (inventoryService != null && !string.IsNullOrEmpty(rewardItemID))
-        {
-            inventoryService.AddItem(rewardItemID);
-            var uiService = ServiceLocator.Get<IUIService>();
-            uiService?.ShowItemPickup(rewardItemID, rewardIcon);
-            Debug.Log($"[MinigameInteractable] Item reward given: {rewardItemID}");
-        }
-        else
-        {
-            Debug.LogWarning("[MinigameInteractable] Cannot give item reward - inventory service or rewardItemID is null");
-        }
-    }
-
-    private void GiveEnvironmentReward()
-    {
-        if (rewardPrefab != null)
-        {
-            Vector3 spawnPos = rewardSpawnPoint != null
-                ? rewardSpawnPoint.position
-                : transform.position + Vector3.up;
-
-            GameObject spawnedObject = Instantiate(rewardPrefab, spawnPos, Quaternion.identity);
-            Debug.Log($"[MinigameInteractable] Environment reward spawned: {rewardPrefab.name}");
-        }
-        else
-        {
-            Debug.LogWarning("[MinigameInteractable] Cannot spawn environment reward - rewardPrefab is null");
-        }
-    }
-
-    private void UnlockStoneDoor()
-    {
-        if (stoneDoor != null)
-        {
-            var player = FindObjectOfType<PlayerInteractionController>();
-            if (player != null)
-            {
-                stoneDoor.OnInteract(player);
-                Debug.Log($"[MinigameInteractable] Stone door opened automatically");
-
-                var uiService = ServiceLocator.Get<IUIService>();
-                uiService?.ShowMessage("Cửa đá đã mở!", 2f);
-            }
-            else
-            {
-                Debug.LogWarning("[MinigameInteractable] Cannot open stone door - player not found");
-            }
-        }
-        else
-        {
-            Debug.LogWarning("[MinigameInteractable] Cannot open stone door - stoneDoor reference is null");
-        }
-    }
-
-    private void OnValidate()
-    {
-        ValidateRewardSettings();
     }
 }

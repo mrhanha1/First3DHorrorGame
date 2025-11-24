@@ -56,5 +56,10 @@ public class InputService : IInputService
     {
         throw new NotImplementedException();
     }
+
+    public PlayerInputActions GetInputActions()
+    {
+        throw new NotImplementedException();
+    }
 }
 

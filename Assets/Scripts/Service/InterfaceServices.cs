@@ -20,6 +20,7 @@ public interface IInputService
     void Disable();
     void SwitchActionMap(string actionMapName);
     void SetCursorState(bool locked);
+    PlayerInputActions GetInputActions();
 }
 
 

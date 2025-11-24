@@ -1,23 +1,25 @@
-using Cinemachine;
-using System;
+﻿using Cinemachine;
 using UnityEngine;
 
+/// <summary>
+/// Quản lý lifecycle, khong co camera, input của minigame
+/// KHÔNG quản lý logic game hay reward
+/// </summary>
 public class MinigameServiceManager : MonoBehaviour, IMinigameService
 {
     [Header("Main Game References")]
-    [SerializeField] private CinemachineVirtualCamera mainGameCam;
     [SerializeField] private string mainGameInputActionMap = "Player";
+    [SerializeField] private CinemachineVirtualCamera mainGameCamera;
 
     [Header("Setting")]
     [SerializeField] private bool pauseGameWhileInMinigame = true;
 
     private IMinigame currentMinigame = null;
-    private Action onMinigameComplete = null;
     private PlayerInteractionController playerController = null;
     private IInputService inputService = null;
 
-    private CinemachineVirtualCamera previousCamera;
     private string previousInputActionMap;
+    private CinemachineVirtualCamera previousCamera;
     private bool wasPlayerLocked = false;
 
     public IMinigame CurrentMinigame => currentMinigame;
@@ -28,6 +30,7 @@ public class MinigameServiceManager : MonoBehaviour, IMinigameService
         inputService = ServiceLocator.Get<IInputService>();
         playerController = FindObjectOfType<PlayerInteractionController>();
     }
+
     private void Update()
     {
         if (currentMinigame != null)
@@ -35,11 +38,12 @@ public class MinigameServiceManager : MonoBehaviour, IMinigameService
             currentMinigame.OnUpdate();
         }
     }
-    public void StartMinigame(IMinigame minigame, Action onComplete = null)
+
+    public void StartMinigame(IMinigame minigame)
     {
         if (currentMinigame != null)
         {
-            Debug.LogWarning("[MinigameService] A minigame is already running. Cannot start a new one");
+            Debug.LogWarning("[MinigameService] A minigame is already running");
             return;
         }
         if (minigame == null)
@@ -51,66 +55,70 @@ public class MinigameServiceManager : MonoBehaviour, IMinigameService
         Debug.Log($"[MinigameService] Starting minigame: {minigame.MinigameName}");
 
         currentMinigame = minigame;
-        onMinigameComplete = onComplete;
         SaveCurrentState();
         LockPlayer();
-        SwitchCamera(minigame.GetVirtualCamera());
-        SwitchActionMap(minigame.GetInputActionMap());
+        if (minigame.GetInputActionMap() != null)
+            SwitchActionMap(minigame.GetInputActionMap());
+        if (minigame.GetVirtualCamera() != null)
+            SwitchCamera(minigame.GetVirtualCamera());
 
         if (pauseGameWhileInMinigame)
-        {
             Time.timeScale = 0f;
-        }
+
         minigame.OnEnter();
     }
-    public void ExitMinigame (bool success = false)
+
+    public void ExitMinigame()
     {
         if (currentMinigame == null)
         {
             Debug.LogWarning("[MinigameService] No minigame is running");
             return;
         }
-        Debug.Log($"[MinigameService] Exiting minigame: {currentMinigame.MinigameName} - Success: {success}");
-        currentMinigame.OnExit(success);
+
+        Debug.Log($"[MinigameService] Exit minigame: {currentMinigame.MinigameName}");
+
         RestoreState();
 
         if (pauseGameWhileInMinigame)
-        {
             Time.timeScale = 1f;
-        }
-        onMinigameComplete?.Invoke();
-        onMinigameComplete = null;
+
         currentMinigame = null;
     }
+
     private void SaveCurrentState()
     {
-        previousCamera = mainGameCam;
         previousInputActionMap = mainGameInputActionMap;
-        wasPlayerLocked = playerController != null && playerController.enabled == false;
+        previousCamera = mainGameCamera;
+        wasPlayerLocked = playerController != null && !playerController.enabled;
     }
+
     private void RestoreState()
     {
-        SwitchCamera(previousCamera);
         SwitchActionMap(previousInputActionMap);
+        SwitchCamera(previousCamera);
         if (!wasPlayerLocked)
         {
             UnlockPlayer();
         }
     }
+
     private void SwitchCamera(CinemachineVirtualCamera targetCam)
     {
         if (targetCam == null)
         {
-            Debug.LogWarning("[MinigameService] target camera is null. Cannot switch");
+            Debug.LogWarning("[MinigameService] switch camera is null");
             return;
         }
-        Debug.Log("[MinigameService] Switch camera to " + targetCam.name);
+        targetCam.Priority = 20;
+        Debug.Log($"[MinigameService] Switch camera to {targetCam.name}");
     }
+
     private void SwitchActionMap(string actionMapName)
     {
         if (string.IsNullOrEmpty(actionMapName))
         {
-            Debug.LogWarning("[MinigameService] action map is null or empty. Cannot switch");
+            Debug.LogWarning("[MinigameService] action map is null or empty");
             return;
         }
         if (inputService is InputSystemService inputSys)
@@ -119,6 +127,7 @@ public class MinigameServiceManager : MonoBehaviour, IMinigameService
             Debug.Log($"[MinigameService] Switch action map to {actionMapName}");
         }
     }
+
     private void LockPlayer()
     {
         if (playerController != null)
@@ -127,6 +136,7 @@ public class MinigameServiceManager : MonoBehaviour, IMinigameService
             playerController.LockMovement();
         }
     }
+
     private void UnlockPlayer()
     {
         if (playerController != null)
@@ -135,11 +145,12 @@ public class MinigameServiceManager : MonoBehaviour, IMinigameService
             playerController.UnlockMovement();
         }
     }
+
     private void OnDestroy()
     {
         if (currentMinigame != null)
         {
-            ExitMinigame(false);
+            ExitMinigame();
         }
     }
 }

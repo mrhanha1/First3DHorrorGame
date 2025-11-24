@@ -89,7 +89,6 @@ public class DoorInteractable : InteractableBase, ILockable
     {
         isAnimating = true;
         PlaySound(doorOpenSound);
-        float elapsedTime = 0f;
 
         Vector3 targetRotation = initialRotation + openAngle;
         Vector3 targetPosition = initialPosition + translateOffset;
@@ -137,11 +136,11 @@ public class DoorInteractable : InteractableBase, ILockable
     {
         if (isLocked)
         {
-            promptText = "Bị khoá";
+            promptText = lockPromptText;
         }
         else
         {
-            promptText = isOpen ? "Đóng cửa" : "Mở cửa";
+            promptText = isOpen ? ClosePromptText : OpenPromptText;
         }
     }
 

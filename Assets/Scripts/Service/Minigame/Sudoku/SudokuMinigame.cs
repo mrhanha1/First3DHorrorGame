@@ -2,6 +2,10 @@
 using UnityEngine.UI;
 using System.Collections;
 
+/// <summary>
+/// Sudoku 9x9 minigame
+/// Tự quản lý logic game và quyết định kết quả
+/// </summary>
 public class SudokuMinigame : MinigameBase
 {
     [Header("UI References")]
@@ -33,7 +37,6 @@ public class SudokuMinigame : MinigameBase
     protected override void Start()
     {
         base.Start();
-
         if (winPanel) winPanel.SetActive(false);
     }
 
@@ -60,9 +63,9 @@ public class SudokuMinigame : MinigameBase
         UpdateSelection();
     }
 
-    public override void OnExit(bool success)
+    public override void OnExit()
     {
-        base.OnExit(success);
+        base.OnExit();
         isPlaying = false;
     }
 
@@ -74,11 +77,7 @@ public class SudokuMinigame : MinigameBase
     protected override void OnRightPressed() => MoveSelection(1, 0);
     protected override void OnIncreasePressed() => IncreaseValue();
     protected override void OnDecreasePressed() => DecreaseValue();
-
     protected override void OnSubmitPressed() => CheckSolution();
-
-    protected override void OnResetPressed() => ResetAllCells();
-
     protected override void OnCancelPressed() => ExitGame();
 
     #endregion
@@ -233,7 +232,6 @@ public class SudokuMinigame : MinigameBase
 
         PlaySound2D(changeSound, 0.6f);
         UpdateUI();
-
         uiService?.ShowMessage("Đã xóa tất cả", 2f);
     }
 
@@ -247,7 +245,7 @@ public class SudokuMinigame : MinigameBase
 
         if (sudokuGrid.IsComplete())
         {
-            OnPuzzleComplete();
+            StartCoroutine(OnPuzzleComplete());
         }
         else
         {
@@ -266,28 +264,22 @@ public class SudokuMinigame : MinigameBase
 
     private void ExitGame()
     {
-        CompleteMinigame(false);
+        OnExit();
     }
 
-    private void OnPuzzleComplete()
+    private IEnumerator OnPuzzleComplete()
     {
         isPlaying = false;
-
         PlaySound2D(completeSound, 1f);
 
         if (winPanel)
-        {
             winPanel.SetActive(true);
-        }
 
-        StartCoroutine(CompleteAfterDelay(2f));
+        CompleteSuccess();
+        yield return new WaitForSeconds(1f);
+        OnExit();
     }
 
-    private IEnumerator CompleteAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        CompleteMinigame(true);
-    }
 
     private void UpdateUI()
     {

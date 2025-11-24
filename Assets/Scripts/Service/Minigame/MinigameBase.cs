@@ -1,8 +1,13 @@
 ﻿using Cinemachine;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 
+/// <summary>
+/// Base class cho tất cả minigame
+/// Quản lý input, audio, UI cơ bản
+/// </summary>
 public abstract class MinigameBase : MonoBehaviour, IMinigame
 {
     [Header("Minigame Settings")]
@@ -29,9 +34,13 @@ public abstract class MinigameBase : MonoBehaviour, IMinigame
     [SerializeField] protected Button resetButton;
     [SerializeField] protected Button exitButton;
 
+    // Event để thông báo kết quả game
+    public event Action<bool> OnGameCompleted;
+
     protected IInputService inputService;
     protected IAudioService audioService;
     protected IUIService uiService;
+    protected MinigameReward rewardComponent;
     protected bool isActive = false;
 
     // Input System
@@ -54,9 +63,11 @@ public abstract class MinigameBase : MonoBehaviour, IMinigame
     protected virtual void Awake()
     {
         if (minigameUI) minigameUI.SetActive(false);
-        if (virtualCamera) virtualCamera.Priority = 0;
+        //if (virtualCamera) virtualCamera.Priority = 1;
 
-        InitializeInputActions();
+        rewardComponent = GetComponent<MinigameReward>();
+
+        //InitializeInputActions();
         SetupButtons();
     }
 
@@ -65,11 +76,13 @@ public abstract class MinigameBase : MonoBehaviour, IMinigame
         inputService = ServiceLocator.Get<IInputService>();
         audioService = ServiceLocator.Get<IAudioService>();
         uiService = ServiceLocator.Get<IUIService>();
+        InitializeInputActions();
     }
 
     private void InitializeInputActions()
     {
-        inputActions = new PlayerInputActions();
+        if (inputService is InputSystemService inputSys)
+            inputActions = inputSys.GetInputActions();
         minigameActionMap = inputActions.asset.FindActionMap("Minigame");
 
         if (minigameActionMap != null)
@@ -86,31 +99,23 @@ public abstract class MinigameBase : MonoBehaviour, IMinigame
 
             // Subscribe events
             if (upAction != null)
-                upAction.performed += _ => OnUpPressed();
-
+                upAction.performed += OnUpPerformed;
             if (downAction != null)
-                downAction.performed += _ => OnDownPressed();
-
+                downAction.performed += OnDownPerformed;
             if (leftAction != null)
-                leftAction.performed += _ => OnLeftPressed();
-
+                leftAction.performed += OnLeftPerformed;
             if (rightAction != null)
-                rightAction.performed += _ => OnRightPressed();
-
+                rightAction.performed += OnRightPerformed;
             if (increaseAction != null)
-                increaseAction.performed += _ => OnIncreasePressed();
-
+                increaseAction.performed += OnIncreasePerformed;
             if (decreaseAction != null)
-                decreaseAction.performed += _ => OnDecreasePressed();
-
+                decreaseAction.performed += OnDecreasePerformed;
             if (submitAction != null)
-                submitAction.performed += _ => OnSubmitPressed();
-
+                submitAction.performed += OnSubmitPerformed;
             if (resetAction != null)
-                resetAction.performed += _ => OnResetPressed();
-
+                resetAction.performed += OnResetPerformed;
             if (cancelAction != null)
-                cancelAction.performed += _ => OnCancelPressed();
+                cancelAction.performed += OnCancelPerformed;
         }
         else
         {
@@ -124,10 +129,8 @@ public abstract class MinigameBase : MonoBehaviour, IMinigame
         downButton?.onClick.AddListener(() => OnDownPressed());
         leftButton?.onClick.AddListener(() => OnLeftPressed());
         rightButton?.onClick.AddListener(() => OnRightPressed());
-
         increaseButton?.onClick.AddListener(() => OnIncreasePressed());
         decreaseButton?.onClick.AddListener(() => OnDecreasePressed());
-
         submitButton?.onClick.AddListener(() => OnSubmitPressed());
         resetButton?.onClick.AddListener(() => OnResetPressed());
         exitButton?.onClick.AddListener(() => OnCancelPressed());
@@ -141,14 +144,8 @@ public abstract class MinigameBase : MonoBehaviour, IMinigame
     {
         isActive = true;
         if (minigameUI) minigameUI.SetActive(true);
-        if (virtualCamera) virtualCamera.Priority = 20;
+        //if (virtualCamera) virtualCamera.Priority = 20;
 
-        // Enable minigame input
-        if (minigameActionMap != null)
-        {
-            inputActions.Player.Disable();
-            minigameActionMap.Enable();
-        }
 
         if (enterSound && audioService != null)
         {
@@ -161,65 +158,100 @@ public abstract class MinigameBase : MonoBehaviour, IMinigame
         // Minigame con có thể override nếu cần
     }
 
-    public virtual void OnExit(bool success)
+    /// <summary>
+    /// Cleanup khi thoát minigame
+    /// Chỉ xử lý UI, input, camera - KHÔNG có logic business
+    /// </summary>
+    public virtual void OnExit()
     {
         isActive = false;
         if (minigameUI) minigameUI.SetActive(false);
-        if (virtualCamera) virtualCamera.Priority = 0;
+        //if (virtualCamera) virtualCamera.Priority = 1;
 
-        // Disable minigame input
-        if (minigameActionMap != null)
-        {
-            minigameActionMap.Disable();
-            inputActions.Player.Enable();
-        }
 
-        AudioClip soundToPlay = success ? (successSound ?? exitSound) : (failureSound ?? exitSound);
-        if (soundToPlay && audioService != null)
+        // Play exit sound
+        if (exitSound && audioService != null)
         {
-            audioService.PlaySound2D(soundToPlay);
-        }
-        Debug.Log($"[Minigame] {minigameName} exited. Success: {success}");
+            audioService.PlaySound2D(exitSound);
+        }// Trigger event cho external listeners (failure)
+        OnGameCompleted?.Invoke(false);
+
+        // Gọi service để cleanup
+        IMinigameService minigameService = ServiceLocator.Get<IMinigameService>();
+        minigameService?.ExitMinigame();
     }
 
-    protected void CompleteMinigame(bool success)
+    /// <summary>
+    /// Gọi khi hoàn thành thành công minigame
+    /// Trigger event, give reward, rồi mới exit
+    /// </summary>
+    protected void CompleteSuccess()
     {
+        // Play success sound
+        if (successSound && audioService != null)
+        {
+            audioService.PlaySound2D(successSound);
+        }
+
+        // Trigger event cho external listeners
+        OnGameCompleted?.Invoke(true);
+
+        // Give reward nếu có
+        if (rewardComponent != null)
+        {
+            rewardComponent.GiveReward();
+        }
+
+    }
+
+    /// <summary>
+    /// Gọi khi muốn thoát minigame (không hoàn thành)
+    /// </summary>
+    protected void ExitMinigame()
+    {
+        // Play exit sound
+        if (exitSound && audioService != null)
+        {
+            audioService.PlaySound2D(exitSound);
+        }
+
+        // Trigger event cho external listeners (failure)
+        OnGameCompleted?.Invoke(false);
+
+        // Gọi service để cleanup
         IMinigameService minigameService = ServiceLocator.Get<IMinigameService>();
-        minigameService?.ExitMinigame(success);
+        minigameService?.ExitMinigame();
     }
 
     protected virtual void OnDestroy()
     {
         // Unsubscribe events
-        if (upAction != null)
-            upAction.performed -= _ => OnUpPressed();
-
-        if (downAction != null)
-            downAction.performed -= _ => OnDownPressed();
-
-        if (leftAction != null)
-            leftAction.performed -= _ => OnLeftPressed();
-
-        if (rightAction != null)
-            rightAction.performed -= _ => OnRightPressed();
-
-        if (increaseAction != null)
-            increaseAction.performed -= _ => OnIncreasePressed();
-
-        if (decreaseAction != null)
-            decreaseAction.performed -= _ => OnDecreasePressed();
-
-        if (submitAction != null)
-            submitAction.performed -= _ => OnSubmitPressed();
-
-        if (resetAction != null)
-            resetAction.performed -= _ => OnResetPressed();
-
-        if (cancelAction != null)
-            cancelAction.performed -= _ => OnCancelPressed();
+        if (upAction != null) upAction.performed -= OnUpPerformed;
+        if (downAction != null) downAction.performed -= OnDownPerformed;
+        if (leftAction != null) leftAction.performed -= OnLeftPerformed;
+        if (rightAction != null) rightAction.performed -= OnRightPerformed;
+        if (increaseAction != null) increaseAction.performed -= OnIncreasePerformed;
+        if (decreaseAction != null) decreaseAction.performed -= OnDecreasePerformed;
+        if (submitAction != null) submitAction.performed -= OnSubmitPerformed;
+        if (resetAction != null) resetAction.performed -= OnResetPerformed;
+        if (cancelAction != null) cancelAction.performed -= OnCancelPerformed;
 
         inputActions?.Dispose();
     }
+
+    #region Input Event Handlers
+
+    private void OnUpPerformed(InputAction.CallbackContext context) => OnUpPressed();
+    private void OnDownPerformed(InputAction.CallbackContext context) => OnDownPressed();
+    private void OnLeftPerformed(InputAction.CallbackContext context) => OnLeftPressed();
+    private void OnRightPerformed(InputAction.CallbackContext context) => OnRightPressed();
+    private void OnIncreasePerformed(InputAction.CallbackContext context) => OnIncreasePressed();
+    private void OnDecreasePerformed(InputAction.CallbackContext context) => OnDecreasePressed();
+    private void OnSubmitPerformed(InputAction.CallbackContext context) => OnSubmitPressed();
+    private void OnResetPerformed(InputAction.CallbackContext context) => OnResetPressed();
+    private void OnCancelPerformed(InputAction.CallbackContext context) => OnCancelPressed();
+
+    #endregion
 
     #region Virtual Input Methods - Override trong minigame con
 
@@ -233,11 +265,10 @@ public abstract class MinigameBase : MonoBehaviour, IMinigame
     protected virtual void OnResetPressed() { }
     protected virtual void OnCancelPressed()
     {
-        // Default behavior: exit minigame
+        if (!isActive) return;
         if (canExit)
         {
-            IMinigameService minigameService = ServiceLocator.Get<IMinigameService>();
-            minigameService?.ExitMinigame(false);
+            OnExit();
         }
     }
 

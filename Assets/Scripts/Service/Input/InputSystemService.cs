@@ -24,6 +24,7 @@ public class InputSystemService : IInputService, IDisposable
         inputActions.Player.Enable();
         //SetCursorState(true);
     }
+    public PlayerInputActions GetInputActions() => inputActions;
 
     public bool IsInteractPressed => interactPressed;
     public bool IsInteractReleased => interactReleased;
