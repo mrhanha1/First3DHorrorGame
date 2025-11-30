@@ -39,6 +39,9 @@ public class GameBootstrap : MonoBehaviour
         RegisterCameraProvider();
         RegisterInventoryService();
         RegisterMinigameService();
+        RegisterSaveService();
+        RegisterGameStateService();
+        RegisterSettingService();
 
         if (enableDebugMode) PrintStatus();
     }
@@ -132,6 +135,24 @@ public class GameBootstrap : MonoBehaviour
         {
             Debug.LogWarning("[GameBootstrap] MinigameServiceManager not found in scene.");
         }
+    }
+    private void RegisterSaveService()
+    {
+        var saveService = new SaveService();
+        ServiceLocator.Register<ISaveService>(saveService);
+        if (enableDebugMode) Debug.Log("Save Service Registered");
+    }
+    private void RegisterGameStateService()
+    {
+        var gameStateService = new GameStateService();
+        ServiceLocator.Register<IGameStateService>(gameStateService);
+        if (enableDebugMode) Debug.Log("Game State Service Registered");
+    }
+    private void RegisterSettingService()
+    {
+        ISettingsService settingService = new SettingsService();
+        ServiceLocator.Register(settingService);
+        if (enableDebugMode) Debug.Log("Setting Service Registered");
     }
     private void PrintStatus()
     {

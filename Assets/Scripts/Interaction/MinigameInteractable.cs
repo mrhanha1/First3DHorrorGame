@@ -22,7 +22,8 @@ public class MinigameInteractable : InteractableBase
     private IMinigameService minigameService;
     private IInventoryService inventoryService;
     private IUIService uiService;
-    private bool isCompleted = false;
+    public bool isCompleted = false;
+    public string minigameID;
 
     protected override void Awake()
     {
@@ -59,6 +60,10 @@ public class MinigameInteractable : InteractableBase
         if (requiresItem && inventoryService != null)
         {
             return inventoryService.HasItem(requiredItemID);
+        }
+        if (isCompleted)
+        {
+            minigame.CompleteSuccess();
         }
 
         return true;
@@ -105,8 +110,14 @@ public class MinigameInteractable : InteractableBase
             Debug.LogError("[MinigameInteractable] No minigame assigned");
             return;
         }
-
-        // Chỉ start, không cần callback
+        if (minigameService.CurrentMinigame != null)
+        {
+            if (minigameService.CurrentMinigame == minigame)
+                minigameService.ResumeMinigame();
+            else
+                uiService?.ShowMessage("Đang có minigame khác đang chạy");
+            return;
+        }
         minigameService.StartMinigame(minigame);
     }
 

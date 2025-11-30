@@ -1,4 +1,5 @@
 ﻿using Cinemachine;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -7,9 +8,13 @@ using UnityEngine;
 public interface IMinigameService
 {
     void StartMinigame(IMinigame minigame);
-    void ExitMinigame(); // Không cần tham số success
+    void ExitMinigame();
+    void PauseMinigame();
+    void ResumeMinigame();
     IMinigame CurrentMinigame { get; }
     bool IsMinigameActive { get; }
+    Dictionary<string, bool> GetAllMinigameStates();
+    void SetMinigameStates(Dictionary<string, bool> states);
 }
 
 /// <summary>
@@ -25,5 +30,7 @@ public interface IMinigame
 
     void OnEnter();
     void OnUpdate();
-    void OnExit(); // Không cần tham số success
+    void OnExit();
+    void OnPause();
+    void OnResume();
 }

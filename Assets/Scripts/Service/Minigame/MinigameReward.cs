@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
-
+/// <summary>
+/// Quản lý phần thưởng khi hoàn thành minigame
+/// </summary>
 public class MinigameReward : MonoBehaviour
 {
     [Header("Reward Type")]

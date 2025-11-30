@@ -4,7 +4,7 @@ using System.Collections;
 
 /// <summary>
 /// Sudoku 9x9 minigame
-/// Tự quản lý logic game và quyết định kết quả
+/// quản lý logic game
 /// </summary>
 public class SudokuMinigame : MinigameBase
 {
@@ -28,6 +28,9 @@ public class SudokuMinigame : MinigameBase
     [SerializeField] private float cellSize = 60f;
     [SerializeField] private float spacing = 2f;
 
+    [Header("3D visual")]
+    [SerializeField] private Sudoku3DManager grid3dmanager;
+
     private SudokuGrid sudokuGrid;
     private SudokuCellUI[,] cellUIs;
     private int selectedRow = 0;
@@ -47,6 +50,8 @@ public class SudokuMinigame : MinigameBase
         // Create puzzle
         sudokuGrid = SudokuData.CreateGrid();
         GenerateGridUI();
+
+        grid3dmanager?.InitializeGrid(sudokuGrid);
 
         selectedRow = 0;
         selectedCol = 0;
@@ -68,6 +73,15 @@ public class SudokuMinigame : MinigameBase
         base.OnExit();
         isPlaying = false;
     }
+    public override void OnPause()
+    {
+        base.OnPause();
+    }
+    public override void OnResume()
+    {
+        base.OnResume();
+        isPlaying = true;
+    }
 
     #region Input Overrides
 
@@ -78,7 +92,7 @@ public class SudokuMinigame : MinigameBase
     protected override void OnIncreasePressed() => IncreaseValue();
     protected override void OnDecreasePressed() => DecreaseValue();
     protected override void OnSubmitPressed() => CheckSolution();
-    protected override void OnCancelPressed() => ExitGame();
+    protected override void OnCancelPressed() => OnPause();
 
     #endregion
 
@@ -175,6 +189,7 @@ public class SudokuMinigame : MinigameBase
         {
             cellUIs[selectedRow, selectedCol].SetSelected(true);
         }
+        grid3dmanager?.SetSelection(selectedRow, selectedCol);
     }
 
     private void IncreaseValue()
@@ -193,6 +208,7 @@ public class SudokuMinigame : MinigameBase
 
         PlaySound2D(changeSound, 0.4f);
         UpdateUI();
+        grid3dmanager?.UpdateCubeValue(selectedRow, selectedCol);
     }
 
     private void DecreaseValue()
@@ -211,6 +227,7 @@ public class SudokuMinigame : MinigameBase
 
         PlaySound2D(changeSound, 0.4f);
         UpdateUI();
+        grid3dmanager?.UpdateCubeValue(selectedRow, selectedCol);
     }
 
     private void ResetAllCells()
@@ -262,13 +279,10 @@ public class SudokuMinigame : MinigameBase
         }
     }
 
-    private void ExitGame()
-    {
-        OnExit();
-    }
 
     private IEnumerator OnPuzzleComplete()
     {
+        grid3dmanager?.PlayCompleteAnimation();
         isPlaying = false;
         PlaySound2D(completeSound, 1f);
 

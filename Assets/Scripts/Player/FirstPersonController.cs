@@ -135,6 +135,7 @@ namespace StarterAssets
 
 		private void CameraRotation()
 		{
+			if (Time.timeScale == 0f) return;
             Vector2 lookInput = inputService.LookInput;
             // if there is an input
             if (lookInput.sqrMagnitude >= _threshold)

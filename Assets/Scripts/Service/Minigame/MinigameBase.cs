@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 /// <summary>
 /// Base class cho tất cả minigame
 /// Quản lý input, audio, UI cơ bản
+/// logic chung cho cac minigame
 /// </summary>
 public abstract class MinigameBase : MonoBehaviour, IMinigame
 {
@@ -142,6 +143,11 @@ public abstract class MinigameBase : MonoBehaviour, IMinigame
 
     public virtual void OnEnter()
     {
+        if (isActive)
+        {
+            //OnResume();
+            return;
+        }
         isActive = true;
         if (minigameUI) minigameUI.SetActive(true);
         //if (virtualCamera) virtualCamera.Priority = 20;
@@ -155,7 +161,7 @@ public abstract class MinigameBase : MonoBehaviour, IMinigame
 
     public virtual void OnUpdate()
     {
-        // Minigame con có thể override nếu cần
+        
     }
 
     /// <summary>
@@ -166,26 +172,36 @@ public abstract class MinigameBase : MonoBehaviour, IMinigame
     {
         isActive = false;
         if (minigameUI) minigameUI.SetActive(false);
-        //if (virtualCamera) virtualCamera.Priority = 1;
 
 
         // Play exit sound
         if (exitSound && audioService != null)
         {
             audioService.PlaySound2D(exitSound);
-        }// Trigger event cho external listeners (failure)
+        }
         OnGameCompleted?.Invoke(false);
 
-        // Gọi service để cleanup
+        // cleanup
         IMinigameService minigameService = ServiceLocator.Get<IMinigameService>();
         minigameService?.ExitMinigame();
+    }
+    public virtual void OnPause()
+    {
+        if (minigameUI) minigameUI.SetActive(false);
+        IMinigameService minigameService = ServiceLocator.Get<IMinigameService>();
+        minigameService?.PauseMinigame();
+    }
+    public virtual void OnResume()
+    {
+        if (minigameUI) minigameUI.SetActive(true);
+        Debug.Log("[MinigameBase] Resumed minigame");
     }
 
     /// <summary>
     /// Gọi khi hoàn thành thành công minigame
     /// Trigger event, give reward, rồi mới exit
     /// </summary>
-    protected void CompleteSuccess()
+    public void CompleteSuccess()
     {
         // Play success sound
         if (successSound && audioService != null)
@@ -202,25 +218,6 @@ public abstract class MinigameBase : MonoBehaviour, IMinigame
             rewardComponent.GiveReward();
         }
 
-    }
-
-    /// <summary>
-    /// Gọi khi muốn thoát minigame (không hoàn thành)
-    /// </summary>
-    protected void ExitMinigame()
-    {
-        // Play exit sound
-        if (exitSound && audioService != null)
-        {
-            audioService.PlaySound2D(exitSound);
-        }
-
-        // Trigger event cho external listeners (failure)
-        OnGameCompleted?.Invoke(false);
-
-        // Gọi service để cleanup
-        IMinigameService minigameService = ServiceLocator.Get<IMinigameService>();
-        minigameService?.ExitMinigame();
     }
 
     protected virtual void OnDestroy()

@@ -45,4 +45,18 @@ public class InventoryService : IInventoryService
     {
         inventory.Clear();
     }
+    public Dictionary<string, int> GetAllItems()
+    {
+        return new Dictionary<string, int>(inventory);
+    }
+    public void SetInventory(Dictionary<string, int> items)
+    {
+        inventory.Clear();
+        if (items != null)
+        {
+            foreach (var item in items)
+                inventory[item.Key] = item.Value;
+        }
+        Debug.Log($"[InventoryService] Inventory loaded. Total items: {inventory.Count}");
+    }
 }

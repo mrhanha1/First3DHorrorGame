@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public interface IInventoryService
@@ -7,4 +8,6 @@ public interface IInventoryService
     bool HasItem(string itemID);
     int GetItemCount(string itemID);
     void ClearInventory();
+    Dictionary<string, int> GetAllItems();
+    void SetInventory(Dictionary<string, int> items);
 }
