@@ -3,26 +3,41 @@ using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("Prefab Setup")]
+    [Tooltip("Kéo 8 prefabs vào đây (Piece 1-8)")]
     public GameObject[] piecePrefabs = new GameObject[8];
     
+    [Header("Grid Settings")]
+    [Tooltip("Kích thước mỗi ô")]
     public Vector2 cellSize = new Vector2(2f, 2f);
     
+    [Tooltip("Khoảng cách giữa các ô")]
     public float spacing = 0.2f;
     
+    [Header("Keyboard Control")]
+    [Tooltip("Di chuyển lên")]
     public KeyCode moveUp = KeyCode.W;
     
+    [Tooltip("Di chuyển xuống")]
     public KeyCode moveDown = KeyCode.S;
     
+    [Tooltip("Di chuyển trái")]
     public KeyCode moveLeft = KeyCode.D;
     
+    [Tooltip("Di chuyển phải")]
     public KeyCode moveRight = KeyCode.A;
     
+    [Tooltip("Shuffle puzzle")]
     public KeyCode shuffle = KeyCode.Space;
     
+    [Tooltip("Reset puzzle")]
     public KeyCode reset = KeyCode.R;
     
+    [Header("Game Settings")]
+    [Range(10, 100)]
     public int shuffleMoves = 30;
     
+    [Tooltip("Tốc độ di chuyển")]
     public float moveSpeed = 10f;
     
     // Grid 3x3: [row, col]
@@ -73,7 +88,7 @@ public class GameManager : MonoBehaviour
                 if (row == 2 && col == 2)
                 {
                     grid[row, col] = null;
-                    correctGrid[row, col] = -1;
+                    correctGrid[row, col] = -1; // -1 = empty
                     continue;
                 }
                 
@@ -122,7 +137,7 @@ public class GameManager : MonoBehaviour
         }
         else if (Input.GetKeyDown(moveRight))
         {
-            TryMovePiece(0, -1); // Di chuyển piece BÊN TRÁI sang phải 
+            TryMovePiece(0, -1); // Di chuyển piece BÊN TRÁI sang phải
         }
         else if (Input.GetKeyDown(shuffle))
         {
@@ -143,7 +158,6 @@ public class GameManager : MonoBehaviour
         // Kiểm tra bounds
         if (targetRow < 0 || targetRow >= 3 || targetCol < 0 || targetCol >= 3)
         {
-            Debug.Log("Không thể di chuyển ra ngoài!");
             return;
         }
         
@@ -390,41 +404,20 @@ public class GameManager : MonoBehaviour
                   $"• [{reset}]: Reset về ban đầu");
     }
     
-    void OnGUI()
+    // Public methods để UI manager có thể truy cập
+    public int GetMoveCount()
     {
-        int padding = 10;
-        int lineHeight = 25;
-        int y = padding;
-        
-        GUIStyle style = new GUIStyle(GUI.skin.label);
-        style.fontSize = 16;
-        style.fontStyle = FontStyle.Bold;
-        style.normal.textColor = Color.white;
-        
-        GUIStyle shadowStyle = new GUIStyle(style);
-        shadowStyle.normal.textColor = Color.black;
-        
-        // Moves
-        string movesText = $"Moves: {moveCount}";
-        GUI.Label(new Rect(padding + 1, y + 1, 200, lineHeight), movesText, shadowStyle);
-        GUI.Label(new Rect(padding, y, 200, lineHeight), movesText, style);
-        y += lineHeight;
-        
-        // Time
-        if (!gameWon)
-        {
-            float time = Time.time - gameStartTime;
-            string timeText = $"Time: {time:F1}s";
-            GUI.Label(new Rect(padding + 1, y + 1, 200, lineHeight), timeText, shadowStyle);
-            GUI.Label(new Rect(padding, y, 200, lineHeight), timeText, style);
-        }
-        else
-        {
-            string winText = "★ COMPLETED! ★";
-            style.normal.textColor = Color.yellow;
-            GUI.Label(new Rect(padding + 1, y + 1, 200, lineHeight), winText, shadowStyle);
-            GUI.Label(new Rect(padding, y, 200, lineHeight), winText, style);
-        }
+        return moveCount;
+    }
+    
+    public float GetGameTime()
+    {
+        return Time.time - gameStartTime;
+    }
+    
+    public bool IsGameWon()
+    {
+        return gameWon;
     }
     
     void OnDrawGizmosSelected()
