@@ -149,7 +149,7 @@ public class GameManager : MonoBehaviour
         }
     }
     
-    void TryMovePiece(int rowOffset, int colOffset)
+    public void TryMovePiece(int rowOffset, int colOffset)
     {
         // Tìm piece kế bên ô trống
         int targetRow = emptyRow + rowOffset;
@@ -434,4 +434,18 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+    void OnEnable()
+    {
+        // Reset khi được bật
+        gameStartTime = Time.time;
+    }
+
+    void OnDisable()
+    {
+        // Dừng tất cả coroutines khi tắt
+        StopAllCoroutines();
+        isMoving = false;
+    }
+
+
 }
