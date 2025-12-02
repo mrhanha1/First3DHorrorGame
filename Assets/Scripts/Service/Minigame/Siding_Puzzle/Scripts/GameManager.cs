@@ -13,9 +13,9 @@ public class GameManager : MonoBehaviour
     
     public KeyCode moveDown = KeyCode.S;
     
-    public KeyCode moveLeft = KeyCode.A;
+    public KeyCode moveLeft = KeyCode.D;
     
-    public KeyCode moveRight = KeyCode.D;
+    public KeyCode moveRight = KeyCode.A;
     
     public KeyCode shuffle = KeyCode.Space;
     
