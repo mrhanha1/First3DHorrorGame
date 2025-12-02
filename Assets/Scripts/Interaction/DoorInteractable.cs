@@ -9,7 +9,7 @@ public class DoorInteractable : InteractableBase, ILockable
     [SerializeField] private Transform doorPanel;
     [SerializeField] private bool isLocked = false;
     [SerializeField] private string requiredKeyID = "";
-    [SerializeField] private Vector3 openAngle = new Vector3(0, 90, 0);
+    [SerializeField] private Vector3 openAngle = new (0, 90, 0);
     [SerializeField] private Vector3 translateOffset = Vector3.zero;
     [SerializeField] private float openDuration = 2f;
     [SerializeField] private bool isOpen = false;
@@ -24,7 +24,7 @@ public class DoorInteractable : InteractableBase, ILockable
     [SerializeField] private AudioClip doorLockedSound;
 
     private bool isAnimating = false;
-    private Vector3 initialRotation;
+    private Quaternion closeRotation;
     private Vector3 initialPosition;
     public bool IsLocked => isLocked;
     public string RequiredKeyID => requiredKeyID;
@@ -35,12 +35,12 @@ public class DoorInteractable : InteractableBase, ILockable
         if (doorPanel == null) doorPanel = this.transform;
         if (isOpen)
         {
-            initialRotation = doorPanel.localEulerAngles - openAngle;
+            closeRotation = doorPanel.localRotation * Quaternion.Inverse(Quaternion.Euler(openAngle));
             initialPosition = doorPanel.localPosition - translateOffset;
         }
         else
         {
-            initialRotation = doorPanel.localEulerAngles;
+            closeRotation = doorPanel.localRotation;
             initialPosition = doorPanel.localPosition;
         }
     }
@@ -90,12 +90,12 @@ public class DoorInteractable : InteractableBase, ILockable
         isAnimating = true;
         PlaySound(doorOpenSound);
 
-        Vector3 targetRotation = initialRotation + openAngle;
+        Quaternion targetRotation = closeRotation * Quaternion.Euler(openAngle);
         Vector3 targetPosition = initialPosition + translateOffset;
 
         Sequence sequence = DOTween.Sequence();
         sequence.SetEase(Ease.InOutSine);
-        sequence.Append(doorPanel.DOLocalRotate(targetRotation, openDuration));
+        sequence.Append(doorPanel.DOLocalRotateQuaternion(targetRotation, openDuration));
         sequence.Join(doorPanel.DOLocalMove(targetPosition, openDuration));
         yield return sequence.WaitForCompletion();
 
@@ -109,7 +109,7 @@ public class DoorInteractable : InteractableBase, ILockable
 
         Sequence sequence = DOTween.Sequence();
         sequence.SetEase(Ease.InOutSine);
-        sequence.Append(doorPanel.DOLocalRotate(initialRotation, openDuration));
+        sequence.Append(doorPanel.DOLocalRotateQuaternion(closeRotation, openDuration));
         sequence.Join(doorPanel.DOLocalMove(initialPosition, openDuration));
         yield return sequence.WaitForCompletion();
 

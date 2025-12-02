@@ -26,12 +26,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2475008504037744646}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.0666}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0.7071068, y: -0, z: -0, w: 0.7071067}
+  m_LocalPosition: {x: 0.008399963, y: -0.5070381, z: 0.002100885}
+  m_LocalScale: {x: 7, y: 7, z: 14.5199995}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7613067110361782782}
+  m_Father: {fileID: 5017248954262860687}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2214913564421059865
 MeshFilter:
@@ -110,12 +110,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2847280923003740353}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.00000005960465, y: -0.00000005960465, z: 0.70710677, w: 0.70710677}
-  m_LocalPosition: {x: -0.004485709, y: -0.069557175, z: -0.03168}
-  m_LocalScale: {x: 7.1857147, y: 7.185714, z: 2.7617083}
+  m_LocalRotation: {x: -0.5, y: 0.5, z: 0.5, w: 0.5}
+  m_LocalPosition: {x: -0.02300024, y: 0, z: 0.489001}
+  m_LocalScale: {x: 50.299995, y: 50.29999, z: 40.1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 7613067110361782782}
+  m_Father: {fileID: 5017248954262860687}
   m_LocalEulerAnglesHint: {x: -90, y: 90, z: 0}
 --- !u!33 &1974716080993416670
 MeshFilter:
@@ -218,9 +218,7 @@ Transform:
   m_LocalPosition: {x: 0.008399963, y: 0.4599936, z: 0.0020999908}
   m_LocalScale: {x: 7, y: 7, z: 14.52}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 2959761828400200380}
-  - {fileID: 3226901998973631099}
+  m_Children: []
   m_Father: {fileID: 5017248954262860687}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6775902748322682459
@@ -304,6 +302,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7613067110361782782}
+  - {fileID: 2959761828400200380}
+  - {fileID: 3226901998973631099}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7492886646508143083
@@ -326,8 +326,12 @@ MonoBehaviour:
   doorPanel: {fileID: 5017248954262860687}
   isLocked: 0
   requiredKeyID: key122
-  openAngle: 90
+  openAngle: {x: 0, y: 90, z: 0}
+  translateOffset: {x: 0, y: 0, z: 0}
   openDuration: 1
+  isOpen: 0
   lockPromptText: Locked
+  OpenPromptText: "M\u1EDF c\u1EEDa"
+  ClosePromptText: "\u0110\xF3ng c\u1EEDa"
   doorOpenSound: {fileID: 0}
   doorLockedSound: {fileID: 0}

@@ -44,7 +44,6 @@ GameObject:
   - component: {fileID: 8251247814672406516}
   - component: {fileID: 6153787782404023102}
   - component: {fileID: 3834021393370555903}
-  - component: {fileID: 8929327962958885624}
   m_Layer: 6
   m_Name: lockerDoor
   m_TagString: Untagged
@@ -138,32 +137,3 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.00032095192, y: 0.005016023, z: 0.015000003}
   m_Center: {x: -0.000039777453, y: -0.00018228327, z: -0.00019984138}
---- !u!114 &8929327962958885624
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5649300718574306027}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7af0ea0e0ac682148ab104194648815a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  promptText: Interact
-  interactionRange: 3
-  interactSound: {fileID: 0}
-  useHighlight: 1
-  highlightColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
-  doorPanel: {fileID: 4388918974892843113}
-  isLocked: 0
-  requiredKeyID: 
-  openAngle: {x: 0, y: -75, z: 0}
-  translateOffset: {x: 0, y: 0, z: 0}
-  openDuration: 1
-  isOpen: 0
-  lockPromptText: "B\u1ECB kho\xE1 r\u1ED3i"
-  OpenPromptText: "M\u1EDF c\u1EEDa"
-  ClosePromptText: "\u0110\xF3ng c\u1EEDa"
-  doorOpenSound: {fileID: 0}
-  doorLockedSound: {fileID: 0}

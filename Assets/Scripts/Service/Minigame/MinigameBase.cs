@@ -24,16 +24,16 @@ public abstract class MinigameBase : MonoBehaviour, IMinigame
     [SerializeField] protected AudioClip successSound;
     [SerializeField] protected AudioClip failureSound;
 
-    [Header("Control Buttons - Optional")]
-    [SerializeField] protected Button upButton;
-    [SerializeField] protected Button downButton;
-    [SerializeField] protected Button leftButton;
-    [SerializeField] protected Button rightButton;
-    [SerializeField] protected Button increaseButton;
-    [SerializeField] protected Button decreaseButton;
-    [SerializeField] protected Button submitButton;
-    [SerializeField] protected Button resetButton;
-    [SerializeField] protected Button exitButton;
+    //[Header("Control Buttons - Optional")]
+    //[SerializeField] protected Button upButton;
+    //[SerializeField] protected Button downButton;
+    //[SerializeField] protected Button leftButton;
+    //[SerializeField] protected Button rightButton;
+    //[SerializeField] protected Button increaseButton;
+    //[SerializeField] protected Button decreaseButton;
+    //[SerializeField] protected Button submitButton;
+    //[SerializeField] protected Button resetButton;
+    //[SerializeField] protected Button exitButton;
 
     // Event để thông báo kết quả game
     public event Action<bool> OnGameCompleted;
@@ -69,7 +69,7 @@ public abstract class MinigameBase : MonoBehaviour, IMinigame
         rewardComponent = GetComponent<MinigameReward>();
 
         //InitializeInputActions();
-        SetupButtons();
+        //SetupButtons();
     }
 
     protected virtual void Start()
@@ -124,18 +124,18 @@ public abstract class MinigameBase : MonoBehaviour, IMinigame
         }
     }
 
-    private void SetupButtons()
-    {
-        upButton?.onClick.AddListener(() => OnUpPressed());
-        downButton?.onClick.AddListener(() => OnDownPressed());
-        leftButton?.onClick.AddListener(() => OnLeftPressed());
-        rightButton?.onClick.AddListener(() => OnRightPressed());
-        increaseButton?.onClick.AddListener(() => OnIncreasePressed());
-        decreaseButton?.onClick.AddListener(() => OnDecreasePressed());
-        submitButton?.onClick.AddListener(() => OnSubmitPressed());
-        resetButton?.onClick.AddListener(() => OnResetPressed());
-        exitButton?.onClick.AddListener(() => OnCancelPressed());
-    }
+    //private void SetupButtons()
+    //{
+    //    upButton?.onClick.AddListener(() => OnUpPressed());
+    //    downButton?.onClick.AddListener(() => OnDownPressed());
+    //    leftButton?.onClick.AddListener(() => OnLeftPressed());
+    //    rightButton?.onClick.AddListener(() => OnRightPressed());
+    //    increaseButton?.onClick.AddListener(() => OnIncreasePressed());
+    //    decreaseButton?.onClick.AddListener(() => OnDecreasePressed());
+    //    submitButton?.onClick.AddListener(() => OnSubmitPressed());
+    //    resetButton?.onClick.AddListener(() => OnResetPressed());
+    //    exitButton?.onClick.AddListener(() => OnCancelPressed());
+    //}
 
     public CinemachineVirtualCamera GetVirtualCamera() => virtualCamera;
     public string GetInputActionMap() => inputActionMap;
@@ -217,6 +217,7 @@ public abstract class MinigameBase : MonoBehaviour, IMinigame
         {
             rewardComponent.GiveReward();
         }
+        uiService?.ShowMessage("Làm được rồi", 2f);
 
     }
 
