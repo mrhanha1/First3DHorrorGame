@@ -23,7 +23,7 @@ public class SaveService : ISaveService
         if (!IsValidSlot(slotIndex)) return;
 
         GameSaveData saveData = CollectGameData(saveName);
-        SerializableGameData serializableData = ConvertToSerializable(saveData);
+        SerializableGameData serializableData = SerializableGameData.FromGameData(saveData);
 
         string json = JsonUtility.ToJson(serializableData, true);
         string filePath = GetSaveFilePath(slotIndex);
@@ -50,7 +50,7 @@ public class SaveService : ISaveService
         {
             string json = File.ReadAllText(filePath);
             SerializableGameData serializableData = JsonUtility.FromJson<SerializableGameData>(json);
-            GameSaveData saveData = ConvertFromSerializable(serializableData);
+            GameSaveData saveData = serializableData.ToGameData();
 
             ApplyGameData(saveData);
             Debug.Log($"[SaveService] Game loaded from slot {slotIndex}");
@@ -117,7 +117,11 @@ public class SaveService : ISaveService
         return slots;
     }
 
-    // Helper Methods
+    public int GetMaxSlots()
+    {
+        return MAX_SAVE_SLOTS;
+    }
+
     private bool IsValidSlot(int slotIndex)
     {
         bool valid = slotIndex >= 0 && slotIndex < MAX_SAVE_SLOTS;
@@ -139,30 +143,21 @@ public class SaveService : ISaveService
         data.saveName = saveName;
         data.saveDate = System.DateTime.Now.ToString("dd/MM/yyyy HH:mm");
 
-        // Get player position
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
             data.playerPosition = player.transform.position;
             data.playerRotation = player.transform.rotation;
         }
-        else
-        {
-            Debug.LogWarning("[SaveService] Player not found. Using default position.");
-        }
 
-        // Get inventory data using new method
         if (ServiceLocator.TryGet<IInventoryService>(out IInventoryService inventory))
         {
             data.inventory = inventory.GetAllItems();
-            Debug.Log($"[SaveService] Saved {data.inventory.Count} inventory items");
         }
 
-        // Get minigame states using new method
         if (ServiceLocator.TryGet<IMinigameService>(out IMinigameService minigame))
         {
             data.minigameStates = minigame.GetAllMinigameStates();
-            Debug.Log($"[SaveService] Saved {data.minigameStates.Count} minigame states");
         }
 
         return data;
@@ -170,11 +165,9 @@ public class SaveService : ISaveService
 
     private void ApplyGameData(GameSaveData data)
     {
-        // Apply player position
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
-            // Disable CharacterController if exists to allow position change
             var charController = player.GetComponent<CharacterController>();
             if (charController != null)
             {
@@ -188,95 +181,16 @@ public class SaveService : ISaveService
                 player.transform.position = data.playerPosition;
                 player.transform.rotation = data.playerRotation;
             }
-            Debug.Log($"[SaveService] Player position loaded: {data.playerPosition}");
-        }
-        else
-        {
-            Debug.LogWarning("[SaveService] Player not found. Cannot restore position.");
         }
 
-        // Apply inventory using new method
         if (ServiceLocator.TryGet<IInventoryService>(out IInventoryService inventory))
         {
             inventory.SetInventory(data.inventory);
-            Debug.Log($"[SaveService] Loaded {data.inventory.Count} inventory items");
         }
 
-        // Apply minigame states using new method
         if (ServiceLocator.TryGet<IMinigameService>(out IMinigameService minigame))
         {
             minigame.SetMinigameStates(data.minigameStates);
-            Debug.Log($"[SaveService] Loaded {data.minigameStates.Count} minigame states");
         }
-    }
-
-    private SerializableGameData ConvertToSerializable(GameSaveData data)
-    {
-        SerializableGameData serializable = new SerializableGameData();
-        serializable.saveName = data.saveName;
-        serializable.saveDate = data.saveDate;
-        serializable.playerPosition = data.playerPosition;
-        serializable.playerRotation = new Vector4(
-            data.playerRotation.x,
-            data.playerRotation.y,
-            data.playerRotation.z,
-            data.playerRotation.w
-        );
-
-        serializable.inventoryItems = new List<SerializableGameData.InventoryItem>();
-        foreach (var item in data.inventory)
-        {
-            serializable.inventoryItems.Add(new SerializableGameData.InventoryItem
-            {
-                itemID = item.Key,
-                quantity = item.Value
-            });
-        }
-
-        serializable.minigameStates = new List<SerializableGameData.MinigameState>();
-        foreach (var state in data.minigameStates)
-        {
-            serializable.minigameStates.Add(new SerializableGameData.MinigameState
-            {
-                minigameID = state.Key,
-                isCompleted = state.Value
-            });
-        }
-
-        return serializable;
-    }
-
-    private GameSaveData ConvertFromSerializable(SerializableGameData serializable)
-    {
-        GameSaveData data = new GameSaveData();
-        data.saveName = serializable.saveName;
-        data.saveDate = serializable.saveDate;
-        data.playerPosition = serializable.playerPosition;
-        data.playerRotation = new Quaternion(
-            serializable.playerRotation.x,
-            serializable.playerRotation.y,
-            serializable.playerRotation.z,
-            serializable.playerRotation.w
-        );
-
-        data.inventory = new Dictionary<string, int>();
-        if (serializable.inventoryItems != null)
-        {
-            foreach (var item in serializable.inventoryItems)
-            {
-                data.inventory[item.itemID] = item.quantity;
-            }
-        }
-
-        data.minigameStates = new Dictionary<string, bool>();
-        if (serializable.minigameStates != null)
-        {
-            foreach (var state in serializable.minigameStates)
-            {
-                data.minigameStates[state.minigameID] = state.isCompleted;
-            }
-        }
-
-        return data;
     }
 }

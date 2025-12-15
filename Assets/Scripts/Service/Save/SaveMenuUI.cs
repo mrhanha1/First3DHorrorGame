@@ -5,24 +5,20 @@ using TMPro;
 public class SaveMenuUI : MonoBehaviour
 {
     [Header("UI References")]
-    [SerializeField] private GameObject saveMenuPanel;
-    [SerializeField] private SaveSlotUI[] saveSlots; // 4 slots
+    [SerializeField] private SaveSlotUI[] saveSlots;
     [SerializeField] private GameObject saveNameInputPanel;
     [SerializeField] private TMP_InputField saveNameInput;
     [SerializeField] private Button confirmSaveButton;
     [SerializeField] private Button cancelSaveButton;
-    [SerializeField] private Button closeMenuButton;
+    [SerializeField] private Button backButton;
     [SerializeField] private TextMeshProUGUI titleText;
 
-    [Header("Settings")]
-    [SerializeField] private bool isSaveMode = true; // true = Save, false = Load
-
     private ISaveService saveService;
+    private bool isSaveMode = true;
     private int selectedSlotIndex = -1;
 
     private void Awake()
     {
-        // Get save service from ServiceLocator
         if (ServiceLocator.TryGet<ISaveService>(out ISaveService service))
         {
             saveService = service;
@@ -32,78 +28,44 @@ public class SaveMenuUI : MonoBehaviour
             Debug.LogError("[SaveMenuUI] SaveService not found in ServiceLocator!");
         }
 
-        // Setup button listeners
         if (confirmSaveButton != null)
             confirmSaveButton.onClick.AddListener(OnConfirmSave);
 
         if (cancelSaveButton != null)
             cancelSaveButton.onClick.AddListener(OnCancelSave);
 
-        if (closeMenuButton != null)
-            closeMenuButton.onClick.AddListener(HideSaveMenu);
+        if (backButton != null)
+            backButton.onClick.AddListener(OnBackClicked);
     }
 
     private void OnEnable()
     {
         RefreshAllSlots();
         HideSaveNameInput();
-
-        if (titleText != null)
-            titleText.text = isSaveMode ? "SAVE GAME" : "LOAD GAME";
+        UpdateTitle();
     }
 
-    /// <summary>
-    /// Chuyển đổi giữa chế độ Save và Load
-    /// </summary>
     public void SetMode(bool saveMode)
     {
         isSaveMode = saveMode;
-        if (titleText != null)
-            titleText.text = isSaveMode ? "SAVE GAME" : "LOAD GAME";
+        UpdateTitle();
         RefreshAllSlots();
     }
 
-    /// <summary>
-    /// Hiển thị menu Save/Load
-    /// </summary>
-    public void ShowSaveMenu(bool saveMode)
-    {
-        SetMode(saveMode);
-        saveMenuPanel?.SetActive(true);
-        RefreshAllSlots();
-    }
-
-    /// <summary>
-    /// Ẩn menu Save/Load
-    /// </summary>
-    public void HideSaveMenu()
-    {
-        saveMenuPanel?.SetActive(false);
-        HideSaveNameInput();
-    }
-
-    /// <summary>
-    /// Được gọi từ SaveSlotUI khi click vào slot
-    /// </summary>
     public void OnSlotClicked(int slotIndex)
     {
         selectedSlotIndex = slotIndex;
 
         if (isSaveMode)
         {
-            // Chế độ Save: hiển thị input để nhập tên
             ShowSaveNameInput(slotIndex);
         }
         else
         {
-            // Chế độ Load: load game trực tiếp
             LoadFromSlot(slotIndex);
         }
     }
 
-    /// <summary>
-    /// Được gọi từ SaveSlotUI khi click nút Delete
-    /// </summary>
     public void OnDeleteSlot(int slotIndex)
     {
         if (saveService == null) return;
@@ -112,21 +74,31 @@ public class SaveMenuUI : MonoBehaviour
         {
             saveService.DeleteSave(slotIndex);
             RefreshAllSlots();
-            Debug.Log($"[SaveMenuUI] Deleted save slot {slotIndex}");
         }
+    }
+
+    private void UpdateTitle()
+    {
+        if (titleText != null)
+            titleText.text = isSaveMode ? "SAVE GAME" : "LOAD GAME";
     }
 
     private void ShowSaveNameInput(int slotIndex)
     {
         if (saveNameInputPanel == null || saveNameInput == null) return;
 
+        if (saveService == null)
+        {
+            Debug.LogError("[SaveMenuUI] SaveService not found in ServiceLocator!");
+            return;
+        }
         saveNameInputPanel.SetActive(true);
 
-        // Pre-fill với tên hiện tại hoặc mặc định
         SaveSlotData slotData = saveService.GetSaveSlotInfo(slotIndex);
-        saveNameInput.text = slotData.isEmpty ? "New Save" : slotData.saveName;
+        saveNameInput.text = slotData.isEmpty ? "Bản lưu mới" : slotData.saveName;
         saveNameInput.Select();
         saveNameInput.ActivateInputField();
+        Debug.Log($"[SaveMenuUI] Showing save name input for slot {slotIndex}");
     }
 
     private void HideSaveNameInput()
@@ -138,7 +110,9 @@ public class SaveMenuUI : MonoBehaviour
     private void OnConfirmSave()
     {
         if (saveService == null) return;
-        if (selectedSlotIndex < 0 || selectedSlotIndex >= 4) return;
+
+        int maxSlots = saveService.GetMaxSlots();
+        if (selectedSlotIndex < 0 || selectedSlotIndex >= maxSlots) return;
 
         string saveName = saveNameInput != null ? saveNameInput.text : "New Save";
         if (string.IsNullOrWhiteSpace(saveName))
@@ -149,8 +123,6 @@ public class SaveMenuUI : MonoBehaviour
         saveService.SaveGame(selectedSlotIndex, saveName);
         HideSaveNameInput();
         RefreshAllSlots();
-
-        Debug.Log($"[SaveMenuUI] Saved to slot {selectedSlotIndex}: {saveName}");
     }
 
     private void OnCancelSave()
@@ -171,7 +143,8 @@ public class SaveMenuUI : MonoBehaviour
         if (saveService.LoadGame(slotIndex))
         {
             Debug.Log($"[SaveMenuUI] Loaded from slot {slotIndex}");
-            HideSaveMenu();
+            // Đóng menu sau khi load thành công
+            MenuManager.Instance?.CloseAll();
         }
         else
         {
@@ -192,5 +165,10 @@ public class SaveMenuUI : MonoBehaviour
                 saveSlots[i].UpdateSlotData(allSlots[i], isSaveMode);
             }
         }
+    }
+
+    private void OnBackClicked()
+    {
+        MenuManager.Instance?.OnBackClicked();
     }
 }

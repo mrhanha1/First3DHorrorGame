@@ -5,15 +5,11 @@ using UnityEngine.Audio;
 public class SettingsService : ISettingsService
 {
     private const string MASTER_VOL_KEY = "MasterVolume";
-    private const string MUSIC_VOL_KEY = "MusicVolume";
-    private const string SFX_VOL_KEY = "SFXVolume";
     private const string BRIGHTNESS_KEY = "Brightness";
     private const string QUALITY_KEY = "QualityLevel";
     private const string SENSITIVITY_KEY = "MouseSensitivity";
 
     public float MasterVolume { get; private set; } = 1f;
-    public float MusicVolume { get; private set; } = 0.8f;
-    public float SFXVolume { get; private set; } = 1f;
     public float Brightness { get; private set; } = 1f;
     public int QualityLevel { get; private set; } = 2;
     public float MouseSensitivity { get; private set; } = 1f;
@@ -33,33 +29,17 @@ public class SettingsService : ISettingsService
             audioMixer.SetFloat("MasterVolume", LinearToDecibel(MasterVolume));
     }
 
-    public void SetMusicVolume(float value)
-    {
-        MusicVolume = Mathf.Clamp01(value);
-        if (audioMixer != null)
-            audioMixer.SetFloat("MusicVolume", LinearToDecibel(MusicVolume));
-    }
-
-    public void SetSFXVolume(float value)
-    {
-        SFXVolume = Mathf.Clamp01(value);
-        if (audioMixer != null)
-            audioMixer.SetFloat("SFXVolume", LinearToDecibel(SFXVolume));
-    }
-
     public void SetBrightness(float value)
     {
-        
         Brightness = Mathf.Clamp(value, 0f, 10f);
         RenderSettings.ambientIntensity = Brightness;
-        RenderSettings.ambientLight = new Color(0.1f,0.1f,0.1f) * Brightness;// mau nen
-        //Debug.Log("[SettingsService] Brightness set to: " + Brightness);
+        RenderSettings.ambientLight = new Color(0.1f, 0.1f, 0.1f) * Brightness;
     }
 
     public void SetQualityLevel(int level)
     {
         QualityLevel = Mathf.Clamp(level, 0, QualitySettings.names.Length - 1);
-        //QualitySettings.SetQualityLevel(QualityLevel);
+        QualitySettings.SetQualityLevel(QualityLevel);
     }
 
     public void SetMouseSensitivity(float value)
@@ -79,8 +59,6 @@ public class SettingsService : ISettingsService
     public void SaveSettings()
     {
         PlayerPrefs.SetFloat(MASTER_VOL_KEY, MasterVolume);
-        PlayerPrefs.SetFloat(MUSIC_VOL_KEY, MusicVolume);
-        PlayerPrefs.SetFloat(SFX_VOL_KEY, SFXVolume);
         PlayerPrefs.SetFloat(BRIGHTNESS_KEY, Brightness);
         PlayerPrefs.SetInt(QUALITY_KEY, QualityLevel);
         PlayerPrefs.SetFloat(SENSITIVITY_KEY, MouseSensitivity);
@@ -90,8 +68,6 @@ public class SettingsService : ISettingsService
     public void LoadSettings()
     {
         SetMasterVolume(PlayerPrefs.GetFloat(MASTER_VOL_KEY, 1f));
-        SetMusicVolume(PlayerPrefs.GetFloat(MUSIC_VOL_KEY, 0.8f));
-        SetSFXVolume(PlayerPrefs.GetFloat(SFX_VOL_KEY, 1f));
         SetBrightness(PlayerPrefs.GetFloat(BRIGHTNESS_KEY, 1f));
         SetQualityLevel(PlayerPrefs.GetInt(QUALITY_KEY, 2));
         SetMouseSensitivity(PlayerPrefs.GetFloat(SENSITIVITY_KEY, 1f));
@@ -100,8 +76,6 @@ public class SettingsService : ISettingsService
     public void ResetToDefault()
     {
         SetMasterVolume(1f);
-        SetMusicVolume(0.8f);
-        SetSFXVolume(1f);
         SetBrightness(1f);
         SetQualityLevel(2);
         SetMouseSensitivity(1f);

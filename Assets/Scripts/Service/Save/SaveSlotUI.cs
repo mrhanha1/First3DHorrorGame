@@ -34,90 +34,66 @@ public class SaveSlotUI : MonoBehaviour
             deleteButton.onClick.AddListener(OnDeleteClicked);
     }
 
-    /// <summary>
-    /// C?p nh?t hi?n th? slot v?i d? li?u m?i
-    /// </summary>
     public void UpdateSlotData(SaveSlotData data, bool isSaveMode)
     {
         slotData = data;
 
-        // C?p nh?t s? slot
         if (slotNumberText != null)
         {
             slotNumberText.text = $"SLOT {data.slotIndex + 1}";
         }
 
-        if (data.isEmpty)
-        {
-            ShowEmptySlot(isSaveMode);
-        }
-        else
-        {
-            ShowFilledSlot();
-        }
+        bool isInteractable = isSaveMode || !data.isEmpty;
+        UpdateSlotVisuals(data.isEmpty, isInteractable, isSaveMode);
 
-        // Hi?n th?/?n nút delete
         if (deleteButton != null)
         {
             deleteButton.gameObject.SetActive(!data.isEmpty);
         }
     }
 
-    private void ShowEmptySlot(bool isSaveMode)
+    private void UpdateSlotVisuals(bool isEmpty, bool isInteractable, bool isSaveMode)
     {
-        // Hi?n th? text "Empty Slot"
         if (emptySlotIndicator != null)
         {
-            emptySlotIndicator.SetActive(true);
-            TextMeshProUGUI emptyText = emptySlotIndicator.GetComponent<TextMeshProUGUI>();
-            if (emptyText != null)
+            emptySlotIndicator.SetActive(isEmpty);
+            if (isEmpty)
             {
-                emptyText.text = isSaveMode ? "< Empty Slot >" : "< No Save Data >";
+                TextMeshProUGUI emptyText = emptySlotIndicator.GetComponent<TextMeshProUGUI>();
+                if (emptyText != null)
+                {
+                    emptyText.text = isSaveMode ? "< Empty Slot >" : "< No Save Data >";
+                }
             }
         }
 
-        // ?n n?i dung slot ??y
         if (filledSlotContent != null)
-            filledSlotContent.SetActive(false);
+        {
+            filledSlotContent.SetActive(!isEmpty);
+        }
 
-        // Trong Load mode, disable slot tr?ng
-        bool isInteractable = isSaveMode;
+        if (!isEmpty)
+        {
+            if (saveNameText != null)
+                saveNameText.text = slotData.saveName;
+
+            if (saveDateText != null)
+                saveDateText.text = slotData.saveDate;
+        }
+
         if (slotButton != null)
             slotButton.interactable = isInteractable;
 
-        // ??i màu background
         if (backgroundImage != null)
         {
-            backgroundImage.color = isInteractable ? emptySlotColor : disabledSlotColor;
-        }
-    }
-
-    private void ShowFilledSlot()
-    {
-        // ?n text "Empty Slot"
-        if (emptySlotIndicator != null)
-            emptySlotIndicator.SetActive(false);
-
-        // Hi?n th? n?i dung slot
-        if (filledSlotContent != null)
-            filledSlotContent.SetActive(true);
-
-        // Hi?n th? tên save
-        if (saveNameText != null)
-            saveNameText.text = slotData.saveName;
-
-        // Hi?n th? ngày gi?
-        if (saveDateText != null)
-            saveDateText.text = slotData.saveDate;
-
-        // Enable button
-        if (slotButton != null)
-            slotButton.interactable = true;
-
-        // ??i màu background
-        if (backgroundImage != null)
-        {
-            backgroundImage.color = filledSlotColor;
+            if (!isInteractable)
+            {
+                backgroundImage.color = disabledSlotColor;
+            }
+            else
+            {
+                backgroundImage.color = isEmpty ? emptySlotColor : filledSlotColor;
+            }
         }
     }
 

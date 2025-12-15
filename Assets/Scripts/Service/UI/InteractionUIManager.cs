@@ -1,7 +1,8 @@
-using DG.Tweening;
+﻿using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -68,8 +69,12 @@ public class InteractionUIManager : MonoBehaviour
     }
     public void ShowItemPickup(string itemName, Sprite icon)
     {
-        if (itemPickupPanel == null || pickupIcon == null) return;
-        pickupText.text = itemName;
+        if (itemPickupPanel == null)
+        {
+            Debug.LogWarning("[InteractionUIManager] Item Pickup Panel is missing.");
+            return;
+        }
+        pickupText.text = $"Nhận được {itemName}";
         if (pickupIcon && icon) pickupIcon.sprite = icon;
 
         itemPickupPanel.SetActive(true);

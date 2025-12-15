@@ -8,6 +8,7 @@ public interface ISaveService
     bool LoadGame(int slotIndex);
     void DeleteSave(int slotIndex);
     bool HasSave(int slotIndex);
+    int GetMaxSlots();
     SaveSlotData GetSaveSlotInfo(int slotIndex);
     SaveSlotData[] GetAllSaveSlots();
 }
@@ -53,31 +54,5 @@ public class GameSaveData
         playerRotation = Quaternion.identity;
         inventory = new Dictionary<string, int>();
         minigameStates = new Dictionary<string, bool>();
-    }
-}
-
-// Serializable version for JSON
-[System.Serializable]
-public class SerializableGameData
-{
-    public string saveName;
-    public string saveDate;
-    public Vector3 playerPosition;
-    public Vector4 playerRotation; // Quaternion as Vector4
-    public List<InventoryItem> inventoryItems;
-    public List<MinigameState> minigameStates;
-
-    [System.Serializable]
-    public class InventoryItem
-    {
-        public string itemID;
-        public int quantity;
-    }
-
-    [System.Serializable]
-    public class MinigameState
-    {
-        public string minigameID;
-        public bool isCompleted;
     }
 }

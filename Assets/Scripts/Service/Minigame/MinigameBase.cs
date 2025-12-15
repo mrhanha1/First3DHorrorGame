@@ -215,7 +215,14 @@ public abstract class MinigameBase : MonoBehaviour, IMinigame
         // Give reward nếu có
         if (rewardComponent != null)
         {
-            rewardComponent.GiveReward();
+            Component[] components = GetComponents<MinigameReward>();
+            foreach (var comp in components)
+            {
+                if (comp is MinigameReward reward)
+                {
+                    reward.GiveReward();
+                }
+            }
         }
         uiService?.ShowMessage("Làm được rồi", 2f);
 

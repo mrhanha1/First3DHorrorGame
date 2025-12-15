@@ -21,6 +21,8 @@ public class InventoryService : IInventoryService
         {
             inventory[itemID] = quantity;
         }
+        var uiService = ServiceLocator.Get<IUIService>();
+        uiService?.ShowItemPickup(itemID,null);
         Debug.Log($"[InventoryService] Added: {itemID}. New count: {inventory[itemID]}");
         return true;
     }

@@ -635,7 +635,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0874d2698eb0e7c44a15f81c79e24b45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  saveMenuPanel: {fileID: 55551164}
   saveSlots:
   - {fileID: 559012875}
   - {fileID: 1661859662}
@@ -645,9 +644,7 @@ MonoBehaviour:
   saveNameInput: {fileID: 1277599535}
   confirmSaveButton: {fileID: 1393812758}
   cancelSaveButton: {fileID: 1893749773}
-  closeMenuButton: {fileID: 0}
   titleText: {fileID: 374506536}
-  isSaveMode: 1
 --- !u!114 &55551167
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2242,7 +2239,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &375176710
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2264,15 +2261,6 @@ MonoBehaviour:
   exitSound: {fileID: 8300000, guid: 804be7bd977f22c4cbefff9c7998211d, type: 3}
   successSound: {fileID: 8300000, guid: 8bda94aa976a1ec41b2f562d04789371, type: 3}
   failureSound: {fileID: 0}
-  upButton: {fileID: 166722069}
-  downButton: {fileID: 1481387396}
-  leftButton: {fileID: 2080979334}
-  rightButton: {fileID: 1814103920}
-  increaseButton: {fileID: 881968725}
-  decreaseButton: {fileID: 1081222588}
-  submitButton: {fileID: 282066298}
-  resetButton: {fileID: 0}
-  exitButton: {fileID: 1974239879}
   cellPrefab: {fileID: 2219818652699125909, guid: 374621c3206f20244b72f13e59b1b799, type: 3}
   gridLayout: {fileID: 1866723778}
   gridContainer: {fileID: 1866723777}
@@ -7810,7 +7798,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9005220659476430818, guid: 2d3a85ecde41a8246a79669975912b74, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 7.165
+      value: 7.935
       objectReference: {fileID: 0}
     - target: {fileID: 9005220659476430818, guid: 2d3a85ecde41a8246a79669975912b74, type: 3}
       propertyPath: m_LocalPosition.z
@@ -8702,7 +8690,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1460831102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8715,129 +8703,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 20d77f2e91733864b92f859e162e70c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minigameName: Minigame
-  virtualCamera: {fileID: 429868332}
-  minigameUI: {fileID: 4874276818051420970}
-  inputActionMap: Minigame
-  canExit: 1
-  enterSound: {fileID: 0}
-  exitSound: {fileID: 0}
-  successSound: {fileID: 0}
-  failureSound: {fileID: 0}
-  upButton: {fileID: 0}
-  downButton: {fileID: 0}
-  leftButton: {fileID: 0}
-  rightButton: {fileID: 0}
-  increaseButton: {fileID: 0}
-  decreaseButton: {fileID: 0}
-  submitButton: {fileID: 0}
-  resetButton: {fileID: 0}
-  exitButton: {fileID: 0}
-  rewardComponent: {fileID: 0}
-  isActive: 0
-  minigameActionMap:
-    m_Name: 
-    m_Id: 
-    m_Asset: {fileID: 0}
-    m_Actions: []
-    m_Bindings: []
-  upAction:
-    m_Name: 
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: b16caaaf-dde4-468d-83e4-b950037efc07
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
-  downAction:
-    m_Name: 
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 8440e0b2-dd49-48c5-b669-3dc457f96494
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
-  leftAction:
-    m_Name: 
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 9a29f528-0742-4428-8a50-3d97966e6036
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
-  rightAction:
-    m_Name: 
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: b1c252f5-93f2-407a-8347-b534eebbbbf4
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
-  increaseAction:
-    m_Name: 
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 44a6c730-0dc6-4ce3-a6ed-46a60606caef
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
-  decreaseAction:
-    m_Name: 
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 874112d0-4258-4158-af90-8723e6cae745
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
-  submitAction:
-    m_Name: 
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: ae29430f-ca85-4448-8d44-da8e7b8be1c1
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
-  resetAction:
-    m_Name: 
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: f7c92515-a820-4b54-97a4-4a32a9ce6185
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
-  cancelAction:
-    m_Name: 
-    m_Type: 0
-    m_ExpectedControlType: 
-    m_Id: 1be6da2c-6d73-4b4e-bd53-a6349d3cd082
-    m_Processors: 
-    m_Interactions: 
-    m_SingletonActionBindings: []
-    m_Flags: 0
-  cellPrefab: {fileID: 7553562804465338581, guid: 811c57ebfb47e3247b475e0062037dc5, type: 3}
-  gridLayout: {fileID: 8859849022948514963}
-  boardContainer: {fileID: 3212621981874109256}
-  winPanel: {fileID: 0}
-  moveSound: {fileID: 0}
-  winSound: {fileID: 0}
-  drawSound: {fileID: 0}
-  columns: 15
-  rows: 15
-  cellSize: 40
-  spacing: 2
-  botPlayer: {fileID: 1460831109}
-  selectedRow: 0
-  selectedCol: 0
-  isPlaying: 0
-  isPaused: 0
 --- !u!65 &1460831103
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -8981,8 +8846,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40ac96b06d75bcb44bbf661ff87ca530, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  caroMinigame: {fileID: 0}
-  cells: []
 --- !u!1 &1477555435
 GameObject:
   m_ObjectHideFlags: 0
@@ -9202,7 +9065,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1517756787
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13239,7 +13102,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &5307249746851061837
 MonoBehaviour:
   m_ObjectHideFlags: 0

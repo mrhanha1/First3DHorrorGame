@@ -25,5 +25,4 @@ public interface IGameStateService
     void LockMovement(bool isLocked);
     void LockInteraction(bool isLocked);
     void SetTimeScale(float timeScale);
-    void ResetTimeScale();
 }

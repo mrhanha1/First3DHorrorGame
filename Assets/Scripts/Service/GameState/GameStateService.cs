@@ -22,6 +22,9 @@ public class GameStateService : IGameStateService
         {
             var previousState = CurrentGameState;
             CurrentGameState = newState;
+
+            IsGamePaused = (newState == GameState.Paused);
+
             OnGameStateChanged?.Invoke(previousState, newState);
             HandleStateChange(newState);
         }
@@ -111,9 +114,9 @@ public class GameStateService : IGameStateService
     public void SetTimeScale(float timeScale)
     {
         UnityEngine.Time.timeScale = timeScale;
-    }
-    public void ResetTimeScale()
-    {
-        UnityEngine.Time.timeScale = 1f;
+        if (timeScale == 0f)
+        {
+            Debug.Log("[GameStateService] Game Paused");
+        }
     }
 }

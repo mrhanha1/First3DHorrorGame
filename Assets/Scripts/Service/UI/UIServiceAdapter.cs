@@ -55,4 +55,6 @@ public class UIServiceAdapter : IUIService
         callback?.Invoke();
         Debug.Log("[UIServiceAdapter] Document closed, callback invoked");
     }
+
+    
 }

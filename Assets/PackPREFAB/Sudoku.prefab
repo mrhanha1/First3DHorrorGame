@@ -516,7 +516,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1705392182013688029}
   - component: {fileID: 907441814140803572}
-  - component: {fileID: 7741883920190361163}
   - component: {fileID: 606045791444307695}
   - component: {fileID: 6531778431542601705}
   m_Layer: 0
@@ -575,21 +574,6 @@ MonoBehaviour:
   cellSize: 60
   spacing: 2
   grid3dmanager: {fileID: 606045791444307695}
---- !u!114 &7741883920190361163
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2488445429454598873}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5efd78f8fbac72941ac58f55a1b9d62f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mainGameInputActionMap: Player
-  mainGameCamera: {fileID: 0}
-  pauseGameWhileInMinigame: 0
 --- !u!114 &606045791444307695
 MonoBehaviour:
   m_ObjectHideFlags: 0

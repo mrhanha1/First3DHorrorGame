@@ -23,4 +23,8 @@ public class DocumentInteractable : InteractableBase
             });
         }
     }
+    public override void OnLookAt(PlayerInteractionController player)
+    {
+        base.OnLookAt(player);
+    }
 }

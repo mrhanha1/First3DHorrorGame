@@ -14,7 +14,7 @@ public class PickableInteractable : InteractableBase
         if (inventory.AddItem(itemID))
         {
             var uiService = ServiceLocator.Get<IUIService>();
-            uiService?.ShowItemPickup(itemName, itemIcon);
+            //uiService?.ShowItemPickup(itemName, itemIcon);
             PlaySound(interactSound);
         }
         if (destroyOnPickup)

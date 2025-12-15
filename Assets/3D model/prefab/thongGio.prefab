@@ -68,6 +68,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: thongGio
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 6b7b970c606f7c441b227897103b5a4c, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 16
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
