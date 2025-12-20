@@ -4,6 +4,7 @@ public class TriggerActivedObject : MonoBehaviour
 {
     [SerializeField] private AudioClip spawnSound;
     [SerializeField] private ParticleSystem vfx;
+    [SerializeField] private bool isLoop = false;
     [SerializeField] private float autoDisableAfter = 5f;
 
     //private void Start()
@@ -19,7 +20,7 @@ public class TriggerActivedObject : MonoBehaviour
     {
         if (spawnSound == null) return;
         var audio = ServiceLocator.Get<IAudioService>();
-        audio?.PlaySoundAtTransform(spawnSound, transform);
+        audio?.PlaySoundAtTransform(spawnSound, transform, 1f, isLoop);
     }
 
     private void PlayVFX()

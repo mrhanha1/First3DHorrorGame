@@ -30,11 +30,20 @@ public class InteractionUIManager : MonoBehaviour
     [SerializeField] private Image documentImage;
     [SerializeField] private Text documentTitle;
     [SerializeField] private Text documentContent;
+    [SerializeField] private Button CloseButton;
 
     private Action onDocumentClose;
     private void Awake()
     {
         HideAll();
+        if (CloseButton)
+        {
+            CloseButton.onClick.AddListener(() =>
+            {
+                CloseDocument();
+                Cursor.lockState = CursorLockMode.Locked;
+            });
+        }
     }
     private void HideAll()
     {

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
@@ -40,7 +40,7 @@ public class SaveSlotUI : MonoBehaviour
 
         if (slotNumberText != null)
         {
-            slotNumberText.text = $"SLOT {data.slotIndex + 1}";
+            slotNumberText.text = $"{data.slotIndex + 1}";
         }
 
         bool isInteractable = isSaveMode || !data.isEmpty;
@@ -62,7 +62,7 @@ public class SaveSlotUI : MonoBehaviour
                 TextMeshProUGUI emptyText = emptySlotIndicator.GetComponent<TextMeshProUGUI>();
                 if (emptyText != null)
                 {
-                    emptyText.text = isSaveMode ? "< Empty Slot >" : "< No Save Data >";
+                    emptyText.text = isSaveMode ? "Bản lưu trống" : "Không có dữ liệu";
                 }
             }
         }

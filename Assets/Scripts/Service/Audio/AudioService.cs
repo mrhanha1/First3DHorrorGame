@@ -8,7 +8,7 @@ public class AudioService : IAudioService
     {
         this.audioParent = new GameObject("AudioSources").transform;
     }
-    public void PlaySound (AudioClip clip, Vector3 position, float volume = 1f)
+    public void PlaySound (AudioClip clip, Vector3 position, float volume = 1f, bool isLoop = false)
     {
         if (clip == null) return;
         GameObject audioObj = new GameObject($"Audio_{clip.name}");
@@ -19,6 +19,7 @@ public class AudioService : IAudioService
         source.clip = clip;
         source.volume = volume;
         source.spatialBlend = 1f; // 3D sound
+        source.loop = isLoop;
         source.Play();
 
         Object.Destroy(audioObj, clip.length+0.1f);
@@ -38,9 +39,9 @@ public class AudioService : IAudioService
 
         Object.Destroy(audioObj, clip.length + 0.1f);
     }
-    public void PlaySoundAtTransform(AudioClip clip, Transform targetTransform, float volume = 1f)
+    public void PlaySoundAtTransform(AudioClip clip, Transform targetTransform, float volume = 1f, bool isLoop = false)
     {
-        PlaySound(clip, targetTransform.position, volume);
+        PlaySound(clip, targetTransform.position, volume, isLoop);
     }
     public void StopAllSounds()
     {

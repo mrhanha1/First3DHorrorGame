@@ -37,9 +37,9 @@ public interface ICameraProvider
 
 public interface IAudioService
 {
-    void PlaySound(AudioClip clip, Vector3 position, float volume = 1f);
+    void PlaySound(AudioClip clip, Vector3 position, float volume = 1f, bool isLoop = false);
     void PlaySound2D(AudioClip clip, float volume = 1f);
-    void PlaySoundAtTransform(AudioClip clip, Transform targetTransform, float volume = 1f);
+    void PlaySoundAtTransform(AudioClip clip, Transform targetTransform, float volume = 1f, bool isLoop = false);
     void StopAllSounds();
 }
 
