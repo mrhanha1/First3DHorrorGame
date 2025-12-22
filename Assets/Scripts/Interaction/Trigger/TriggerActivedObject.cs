@@ -20,7 +20,7 @@ public class TriggerActivedObject : MonoBehaviour
     {
         if (spawnSound == null) return;
         var audio = ServiceLocator.Get<IAudioService>();
-        audio?.PlaySoundAtTransform(spawnSound, transform, 1f, isLoop);
+        audio?.PlaySoundAtTransform(spawnSound, transform, 5f, isLoop);
     }
 
     private void PlayVFX()

@@ -21,7 +21,7 @@ public class DoorInteractable : InteractableBase, ILockable
 
     [Header("Audio")]
     [SerializeField] private AudioClip doorOpenSound;
-    [SerializeField] private AudioClip doorLockedSound;
+    [SerializeField] private AudioClip doorCloseSound;
 
     private bool isAnimating = false;
     private Quaternion closeRotation;
@@ -70,7 +70,7 @@ public class DoorInteractable : InteractableBase, ILockable
             }
             else
             {
-                PlaySound(doorLockedSound);
+                PlaySound(doorCloseSound);
                 var uiService = ServiceLocator.Get<IUIService>();
                 uiService.ShowMessage(lockPromptText);
                 return;
@@ -113,7 +113,7 @@ public class DoorInteractable : InteractableBase, ILockable
         sequence.Join(doorPanel.DOLocalMove(initialPosition, openDuration));
         yield return sequence.WaitForCompletion();
 
-        PlaySound(doorLockedSound);
+        PlaySound(doorCloseSound);
         isOpen = false;
         isAnimating = false;
         UpdatePrompt();

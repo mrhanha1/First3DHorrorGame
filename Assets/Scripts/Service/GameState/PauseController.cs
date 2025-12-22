@@ -26,6 +26,19 @@ public class PauseController : MonoBehaviour
 
     private void HandlePauseInput()
     {
+        // Không cho pause khi đang ở start menu
+        if (MenuManager.Instance != null)
+        {
+            var currentMenuType = MenuManager.Instance.GetType()
+                .GetField("currentState", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                ?.GetValue(MenuManager.Instance) as MenuState;
+
+            if (currentMenuType?.MenuType == MenuType.Start)
+            {
+                return;
+            }
+        }
+
         if (gameState.IsGamePaused)
         {
             MenuManager.Instance?.OnBackClicked();

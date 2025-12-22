@@ -1,0 +1,154 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &3278679414603471525
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 05294f1e0261bf64d95e3b3a9a42918b, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 10.529999
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 05294f1e0261bf64d95e3b3a9a42918b, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 17.249802
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 05294f1e0261bf64d95e3b3a9a42918b, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.20782894
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 05294f1e0261bf64d95e3b3a9a42918b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.5623603
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 05294f1e0261bf64d95e3b3a9a42918b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.53
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 05294f1e0261bf64d95e3b3a9a42918b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -12.4
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 05294f1e0261bf64d95e3b3a9a42918b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071067
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 05294f1e0261bf64d95e3b3a9a42918b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 05294f1e0261bf64d95e3b3a9a42918b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 05294f1e0261bf64d95e3b3a9a42918b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 05294f1e0261bf64d95e3b3a9a42918b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 05294f1e0261bf64d95e3b3a9a42918b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 05294f1e0261bf64d95e3b3a9a42918b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 05294f1e0261bf64d95e3b3a9a42918b, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 05294f1e0261bf64d95e3b3a9a42918b, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 507b2766370ccf848b07b3a17f255920, type: 2}
+    - target: {fileID: 919132149155446097, guid: 05294f1e0261bf64d95e3b3a9a42918b, type: 3}
+      propertyPath: m_Name
+      value: BenhAnDocument
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 05294f1e0261bf64d95e3b3a9a42918b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6629818241898933104}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 05294f1e0261bf64d95e3b3a9a42918b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8001220864921548708}
+  m_SourcePrefab: {fileID: 100100000, guid: 05294f1e0261bf64d95e3b3a9a42918b, type: 3}
+--- !u!1 &2396298042176071668 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 05294f1e0261bf64d95e3b3a9a42918b, type: 3}
+  m_PrefabInstance: {fileID: 3278679414603471525}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &6629818241898933104
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2396298042176071668}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.019999998, y: 0.019999994, z: 0.019999998}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &8001220864921548708
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2396298042176071668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8be9094cd9a1a6f4196227fa156c0ada, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  promptText: "T\u01B0\u01A1ng t\xE1c"
+  interactionRange: 1
+  interactSound: {fileID: 8300000, guid: 2bc7485115421d449b98e16a1eabbc60, type: 3}
+  useHighlight: 1
+  highlightColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  documentTitle: "H\u1ED3 s\u01A1 b\u1EC7nh \xE1n"
+  documentImage: {fileID: 21300000, guid: 5eb8da9c88c116441a3dce0b36f0eac8, type: 3}
+  documentText: "M\xE3 b\u1EC7nh nh\xE2n: ********\r\nCh\u1EA9n \u0111o\xE1n:\r\n1.
+    R\u1ED1i lo\u1EA1n lo \xE2u lan t\u1ECFa (F41.1)\n2. R\u1ED1i lo\u1EA1n \u0111i\u1EC1u
+    ch\u1EC9nh v\u1EDBi lo \xE2u v\xE0 t\xE2m tr\u1EA1ng ch\xE1n n\u1EA3n h\u1ED7n
+    h\u1EE3p (F43.23)\r\n\r3. Tr\xE0o ng\u01B0\u1EE3c d\u1EA1 d\xE0y th\u1EF1c qu\u1EA3n
+    (K21.9) - nghi ng\u1EDD ngu\u1ED3n g\u1ED1c t\xE2m th\u1EC3.\r\n\rDi\u1EC5n bi\u1EBFn
+    l\xE2m s\xE0ng:\r\nB\u1EC7nh nh\xE2n v\xE0o vi\u1EC7n trong t\xECnh tr\u1EA1ng
+    suy ki\u1EC7t th\u1EC3 ch\u1EA5t v\xE0 tinh th\u1EA7n. Bi\u1EC3u hi\u1EC7n ch\xEDnh:\r\n\rTh\u1EC3
+    ch\u1EA5t: \u0110au th\u01B0\u1EE3ng v\u1ECB dai d\u1EB3ng, c\u1EA3m gi\xE1c
+    n\xF3ng r\xE1t, \u1EE3 chua, bu\u1ED3n n\xF4n, \u0111\u1EB7c bi\u1EC7t t\u0103ng
+    n\u1EB7ng v\xE0o c\xE1c th\u1EDDi \u0111i\u1EC3m c\u0103ng th\u1EB3ng. \u0102n
+    u\u1ED1ng k\xE9m, s\u1EE5t c\xE2n. C\xE1c x\xE9t nghi\u1EC7m c\u1EADn l\xE2m
+    s\xE0ng (n\u1ED9i soi, x\xE9t nghi\u1EC7m d\u1ECBch v\u1ECB) cho th\u1EA5y h\xECnh
+    \u1EA3nh vi\xEAm th\u1EF1c qu\u1EA3n v\xE0 d\u1EA1 d\xE0y nh\u1EB9, kh\xF4ng
+    t\xECm th\u1EA5y t\u1ED5n th\u01B0\u01A1ng th\u1EF1c th\u1EC3 nghi\xEAm tr\u1ECDng
+    n\xE0o kh\xE1c, c\u1EE7ng c\u1ED1 gi\u1EA3 thuy\u1EBFt b\u1EC7nh l\xFD c\xF3
+    ngu\u1ED3n g\u1ED1c t\xE2m l\xFD.\r\n\r\nT\xE2m th\u1EA7n: Bi\u1EC3u hi\u1EC7n
+    lo \xE2u qu\xE1 m\u1EE9c, c\u1EA3nh gi\xE1c cao \u0111\u1ED9, d\u1EC5 gi\u1EADt
+    m\xECnh. B\u1EC7nh nh\xE2n th\u01B0\u1EDDng xuy\xEAn c\xF3 c\u1EA3m gi\xE1c \"b\u1ECB
+    theo d\xF5i\" ho\u1EB7c \"s\u1EAFp x\u1EA3y ra chuy\u1EC7n x\u1EA5u\", ngay c\u1EA3
+    trong m\xF4i tr\u01B0\u1EDDng an to\xE0n. Ng\u1EE7 kh\xF4ng y\xEAn gi\u1EA5c,
+    hay g\u1EB7p \xE1c m\u1ED9ng v\u1EDBi n\u1ED9i dung b\u1ECB truy \u0111u\u1ED5i
+    ho\u1EB7c b\u1ECB t\u1EA5n c\xF4ng. C\xF3 d\u1EA5u hi\u1EC7u tr\u1EA7m c\u1EA3m
+    nh\u1EB9: m\u1EA5t h\u1EE9ng th\xFA, m\u1EC7t m\u1ECFi, c\u1EA3m gi\xE1c v\xF4
+    v\u1ECDng..."

@@ -2,11 +2,12 @@ using UnityEngine;
 
 public enum MenuType
 {
+    Start,
     Main,
     Settings,
-    SaveLoad
+    SaveLoad,
+    GameCompleted
 }
-
 
 public abstract class MenuState
 {

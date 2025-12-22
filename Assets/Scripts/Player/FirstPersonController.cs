@@ -73,6 +73,7 @@ namespace StarterAssets
 		private CharacterController _controller;
 		private PlayerMovementController _input;
 		private GameObject _mainCamera;
+		private FootstepController footstep;
 
 		private const float _threshold = 0.01f;
 
@@ -101,7 +102,7 @@ namespace StarterAssets
 		{
 			_controller = GetComponent<CharacterController>();
 			_input = GetComponent<PlayerMovementController>();
-			
+            footstep = GetComponent<FootstepController>();
             inputService = ServiceLocator.Get<IInputService>();
 #if ENABLE_INPUT_SYSTEM
             _playerInput = GetComponent<PlayerInput>();
@@ -169,9 +170,14 @@ namespace StarterAssets
 			// note: Vector2's == operator uses approximation so is not floating point error prone, and is cheaper than magnitude
 			// if there is no input, set the target speed to 0
 			if (moveInput == Vector2.zero) targetSpeed = 0.0f;
-
-			// a reference to the players current horizontal velocity
-			float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude;
+			if (moveInput != Vector2.zero && footstep != null)
+            {
+                if (isSprinting) footstep.PlaySprintStep();
+                else footstep.PlayBaseStep();
+            }
+			else footstep?.StopFootstep();
+            // a reference to the players current horizontal velocity
+            float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude;
 
 			float speedOffset = 0.1f;
 			float inputMagnitude = moveInput.magnitude;
