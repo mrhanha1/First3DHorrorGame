@@ -387,6 +387,15 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Skip"",
+                    ""type"": ""Button"",
+                    ""id"": ""e4fa99af-f6eb-42a5-b640-1bdec808957e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -488,6 +497,17 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Submit"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ff833005-866c-49a7-af06-a0dbccb8e574"",
+                    ""path"": ""<Keyboard>/b"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Skip"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -562,6 +582,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         m_Minigame_Submit = m_Minigame.FindAction("Submit", throwIfNotFound: true);
         m_Minigame_Cancel = m_Minigame.FindAction("Cancel", throwIfNotFound: true);
         m_Minigame_Reset = m_Minigame.FindAction("Reset", throwIfNotFound: true);
+        m_Minigame_Skip = m_Minigame.FindAction("Skip", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -726,6 +747,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_Minigame_Submit;
     private readonly InputAction m_Minigame_Cancel;
     private readonly InputAction m_Minigame_Reset;
+    private readonly InputAction m_Minigame_Skip;
     public struct MinigameActions
     {
         private @PlayerInputActions m_Wrapper;
@@ -739,6 +761,7 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         public InputAction @Submit => m_Wrapper.m_Minigame_Submit;
         public InputAction @Cancel => m_Wrapper.m_Minigame_Cancel;
         public InputAction @Reset => m_Wrapper.m_Minigame_Reset;
+        public InputAction @Skip => m_Wrapper.m_Minigame_Skip;
         public InputActionMap Get() { return m_Wrapper.m_Minigame; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -775,6 +798,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Reset.started += instance.OnReset;
             @Reset.performed += instance.OnReset;
             @Reset.canceled += instance.OnReset;
+            @Skip.started += instance.OnSkip;
+            @Skip.performed += instance.OnSkip;
+            @Skip.canceled += instance.OnSkip;
         }
 
         private void UnregisterCallbacks(IMinigameActions instance)
@@ -806,6 +832,9 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
             @Reset.started -= instance.OnReset;
             @Reset.performed -= instance.OnReset;
             @Reset.canceled -= instance.OnReset;
+            @Skip.started -= instance.OnSkip;
+            @Skip.performed -= instance.OnSkip;
+            @Skip.canceled -= instance.OnSkip;
         }
 
         public void RemoveCallbacks(IMinigameActions instance)
@@ -880,5 +909,6 @@ public partial class @PlayerInputActions: IInputActionCollection2, IDisposable
         void OnSubmit(InputAction.CallbackContext context);
         void OnCancel(InputAction.CallbackContext context);
         void OnReset(InputAction.CallbackContext context);
+        void OnSkip(InputAction.CallbackContext context);
     }
 }

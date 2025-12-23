@@ -68,7 +68,7 @@ public class SlidingPuzzleMinigame : MinigameBase
         base.OnEnter();
 
         puzzleLogic = new SlidingPuzzleLogic();
-        //puzzleLogic.Shuffle(20);
+        puzzleLogic.Shuffle(20);
         GeneratePiecesUI();
 
         moveCount = 0;
@@ -226,13 +226,16 @@ public class SlidingPuzzleMinigame : MinigameBase
         ClearPieces();
 
         pieceObjects = new GameObject[puzzleLogic.Rows, puzzleLogic.Cols];
-        int pieceIndex = 0;
 
+        // THAY ĐỔI: Lấy pieceIndex từ grid sau shuffle
         for (int row = 0; row < puzzleLogic.Rows; row++)
         {
             for (int col = 0; col < puzzleLogic.Cols; col++)
             {
-                if (row == 2 && col == 2)
+                int pieceIndex = puzzleLogic.GetPieceAt(row, col);
+
+                // Empty cell
+                if (pieceIndex == -1)
                 {
                     pieceObjects[row, col] = null;
                     continue;
@@ -242,12 +245,11 @@ public class SlidingPuzzleMinigame : MinigameBase
                 GameObject piece = Instantiate(
                     piecePrefabs[pieceIndex],
                     position,
-                    Quaternion.Euler(90f,180f,0f),
+                    Quaternion.Euler(90f, 180f, 0f),
                     boardContainer);
                 piece.name = $"Piece_{pieceIndex + 1}_[{row},{col}]";
 
                 pieceObjects[row, col] = piece;
-                pieceIndex++;
             }
         }
 

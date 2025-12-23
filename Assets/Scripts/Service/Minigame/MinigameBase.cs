@@ -3,6 +3,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 /// <summary>
 /// Base class cho tất cả minigame
@@ -23,17 +24,6 @@ public abstract class MinigameBase : MonoBehaviour, IMinigame
     [SerializeField] protected AudioClip exitSound;
     [SerializeField] protected AudioClip successSound;
     [SerializeField] protected AudioClip failureSound;
-
-    //[Header("Control Buttons - Optional")]
-    //[SerializeField] protected Button upButton;
-    //[SerializeField] protected Button downButton;
-    //[SerializeField] protected Button leftButton;
-    //[SerializeField] protected Button rightButton;
-    //[SerializeField] protected Button increaseButton;
-    //[SerializeField] protected Button decreaseButton;
-    //[SerializeField] protected Button submitButton;
-    //[SerializeField] protected Button resetButton;
-    //[SerializeField] protected Button exitButton;
 
     // Event để thông báo kết quả game
     public event Action<bool> OnGameCompleted;
@@ -57,6 +47,7 @@ public abstract class MinigameBase : MonoBehaviour, IMinigame
     private InputAction submitAction;
     private InputAction resetAction;
     private InputAction cancelAction;
+    private InputAction skipAction;
 
     public string MinigameName => minigameName;
     public bool CanExit => canExit;
@@ -97,7 +88,7 @@ public abstract class MinigameBase : MonoBehaviour, IMinigame
             submitAction = minigameActionMap.FindAction("Submit");
             resetAction = minigameActionMap.FindAction("Reset");
             cancelAction = minigameActionMap.FindAction("Cancel");
-
+            skipAction = minigameActionMap.FindAction("Skip");
             // Subscribe events
             if (upAction != null)
                 upAction.performed += OnUpPerformed;
@@ -117,6 +108,8 @@ public abstract class MinigameBase : MonoBehaviour, IMinigame
                 resetAction.performed += OnResetPerformed;
             if (cancelAction != null)
                 cancelAction.performed += OnCancelPerformed;
+            if (skipAction != null)
+                skipAction.performed += OnSkipPerformed;
         }
         else
         {
@@ -240,7 +233,7 @@ public abstract class MinigameBase : MonoBehaviour, IMinigame
         if (submitAction != null) submitAction.performed -= OnSubmitPerformed;
         if (resetAction != null) resetAction.performed -= OnResetPerformed;
         if (cancelAction != null) cancelAction.performed -= OnCancelPerformed;
-
+        if (skipAction != null) skipAction.performed -= OnSkipPerformed;
         inputActions?.Dispose();
     }
 
@@ -255,6 +248,7 @@ public abstract class MinigameBase : MonoBehaviour, IMinigame
     private void OnSubmitPerformed(InputAction.CallbackContext context) => OnSubmitPressed();
     private void OnResetPerformed(InputAction.CallbackContext context) => OnResetPressed();
     private void OnCancelPerformed(InputAction.CallbackContext context) => OnCancelPressed();
+    private void OnSkipPerformed(InputAction.CallbackContext context) => OnSkipPressed();
 
     #endregion
 
@@ -275,6 +269,18 @@ public abstract class MinigameBase : MonoBehaviour, IMinigame
         {
             OnExit();
         }
+    }
+    protected virtual void OnSkipPressed()
+    {
+        if (!isActive) return;
+        CompleteSuccess();
+        StartCoroutine(ExitAfterSkip());
+    }
+
+    private IEnumerator ExitAfterSkip()
+    {
+        yield return new WaitForSeconds(2f);
+        OnExit();
     }
 
     #endregion

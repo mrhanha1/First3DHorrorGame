@@ -32,7 +32,6 @@ public class GameBootstrap : MonoBehaviour
         if (enableDebugMode) Debug.Log("===Initializing Game Bootstrap===");
 
         RegisterInputService();
-        RegisterCameraService();
         RegisterAudioService();
         RegisterHighlighterService();
         RegisterUIService();
@@ -104,18 +103,6 @@ public class GameBootstrap : MonoBehaviour
         IUIService uiService = uiManager != null ? new UIServiceAdapter(uiManager) : new DummyUIService();
         ServiceLocator.Register<IUIService>(uiService);
         if (enableDebugMode) Debug.Log("UI Service Registered");
-    }
-    private void RegisterCameraService()
-    {
-        var cameraShake = FindObjectOfType<CameraShakeManager>();
-        if (cameraShake == null)
-        {
-            var obj = new GameObject("CameraService");
-            obj.transform.SetParent(transform);
-            cameraShake = obj.AddComponent<CameraShakeManager>();
-        }
-        ServiceLocator.Register<ICameraService>(cameraShake);
-        if (enableDebugMode) Debug.Log("Camera Service Registered");
     }
     private void RegisterInventoryService()
     {

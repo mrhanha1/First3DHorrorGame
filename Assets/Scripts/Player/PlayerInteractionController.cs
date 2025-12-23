@@ -106,16 +106,14 @@ public class PlayerInteractionController : MonoBehaviour
         if (interactable is IHoldable) return InteractionType.Hold;
         return InteractionType.Instant;
     }
-    public void LockInteraction() //hàm dùng cho trường hợp khoá mọi tương tác của player
+    public void LockInteraction()
     {
         isLocked = true;
         SetCurrentInteractable(null);
-        //inputService.SetCursorState(false);
     }
     public void UnlockInteraction()
     {
         isLocked = false;
-        //inputService.SetCursorState(true);
     }
     public void LockMovement()
     {
