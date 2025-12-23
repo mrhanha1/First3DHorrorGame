@@ -104,7 +104,6 @@ public class MinigameServiceManager : MonoBehaviour, IMinigameService
         Debug.Log($"[MinigameService] Pausing minigame: {currentMinigame.MinigameName}");
         if (pauseGameWhileInMinigame)
             Time.timeScale = 1f;
-        //SaveCurrentState();
         RestoreState();
     }
     public void ResumeMinigame()

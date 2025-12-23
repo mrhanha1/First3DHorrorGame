@@ -138,12 +138,10 @@ public abstract class MinigameBase : MonoBehaviour, IMinigame
     {
         if (isActive)
         {
-            //OnResume();
             return;
         }
         isActive = true;
         if (minigameUI) minigameUI.SetActive(true);
-        //if (virtualCamera) virtualCamera.Priority = 20;
 
 
         if (enterSound && audioService != null)
@@ -156,11 +154,6 @@ public abstract class MinigameBase : MonoBehaviour, IMinigame
     {
         
     }
-
-    /// <summary>
-    /// Cleanup khi thoát minigame
-    /// Chỉ xử lý UI, input, camera - KHÔNG có logic business
-    /// </summary>
     public virtual void OnExit()
     {
         isActive = false;

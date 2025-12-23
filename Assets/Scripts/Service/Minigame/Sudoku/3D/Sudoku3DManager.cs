@@ -90,12 +90,10 @@ public class Sudoku3DManager : MonoBehaviour
                 SudokuCell cell = sudokuGrid.GetCell(row, col);
                 cube.Initialize(cell, this);
 
-                // Set material
                 SetCubeMaterial(cube, cell);
 
                 cubes[row, col] = cube;
 
-                // Animate vào t? d??i lên
                 AnimateCubeSpawn(cube, 0.05f * (row + col));
                 Debug.Log($"[Sudoku 3D Manager] Generated cube at ({row}, {col}) with value {cell.value}");
             }
@@ -147,10 +145,10 @@ public class Sudoku3DManager : MonoBehaviour
 
         // Animate height change
         float targetHeight = CalculateHeight(cell.value);
-        Vector3 currentPos = cube.transform.position;
+        Vector3 currentPos = cube.transform.localPosition;// cube.transform.position;
         Vector3 targetPos = new Vector3(currentPos.x, targetHeight, currentPos.z);
 
-        cube.transform.DOMove(targetPos, animationDuration)
+        cube.transform.DOLocalMove(targetPos, animationDuration)//DOMove(targetPos, animationDuration)
             .SetEase(animationEase);
 
         // Update material
